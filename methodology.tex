@@ -35,37 +35,65 @@ The \texttt{C++} object-oriented class design can be visualised using a UML clas
 
 These classes are used in the following sequence in the proposed solution[insert UML sequence diagram]:
 
-The \texttt{mpbenchmark} implementation in the \texttt{C} language used \texttt{printf} function for printing throughout the application. Porting this printing functionality to C++ was a slight challenge as \texttt{printf} uses format string based formatting compared to the stream-based formatting used by \texttt{std::cout} in \texttt{C++}. This limitation in \texttt{C++} was addressed in \texttt{C++20} standard by the use of \texttt{std::format}, strangely \texttt{std::format} was not available on the \texttt{gcc} compiler version on target system despite the compiler supporting \texttt{C++20} standard[insert reference]. A work around for this problem was to use the \texttt{fmt::print} function from the \texttt{fmt} library in \texttt{C++}, this library has been reported as being the inspiration for the \texttt{std::format} functionality[insert reference] . Full system specifications and code snippet regarding the usage of fmt::print can be found in the appendix. 
+The \texttt{mpbenchmark} implementation in the \texttt{C} language utilized the \texttt{printf} function for output throughout the application. Transitioning this functionality to \texttt{C++} posed a challenge, as \texttt{printf} relies on ``format string based" formatting, whereas \texttt{C++} typically uses ``stream-based" formatting through \texttt{std::cout}. This discrepancy was addressed in the \texttt{C++20} standard with the introduction of \texttt{std::format}. However, oddly enough, \texttt{std::format} was not supported by the \texttt{gcc} compiler version on the target system, despite it supporting the \texttt{C++20} standard\cite{std_format_gcc_compiler_version}. A workaround involved using the \texttt{fmt::print} function from the \texttt{fmt} library, which is noted as the inspiration behind \texttt{std::format}\cite{fmt_printing_library}. Detailed system specifications and a code snippet demonstrating the use of \texttt{fmt::print} are provided in the appendix.
 
-The original \texttt{mpbenchmark} code featured a command line argument that enabled the user (or developer) to specify the engine type for performing calculations. The application supports three different engine types. Crucially, the number of threads utilized by the application could be adjusted using the \texttt{taskset} command in \texttt{Linux}, which specifies the CPU cores that the application is permitted to run on. To enhance functionality, a second command line argument was introduced in the proposed solution. This new argument allows the user to specify the desired number of threads for the application to use. If this parameter is left unspecified, the application defaults to utilizing the maximum number of threads available on the system. This enhancement is illustrated in the following code snippet(listing \label{lst:main})[move to appendix]:
+The original \texttt{mpbenchmark} code included a command line argument allowing the user (or developer) to specify the engine type for computations. The application supports three distinct engine types. Importantly, the number of threads the application employs can be modified using the \texttt{taskset} command in \texttt{Linux}, which determines the CPU cores the application can run on. To improve this functionality, a second command line argument was added in the proposed solution. This new parameter enables users to set the number of threads the application should use. If this argument is omitted, the application automatically defaults to the maximum number of threads available on the system. This enhancement is detailed in a code snippet in the appendix.
 
 \begin{lstlisting}[
 	caption={Command line arguments of the new \texttt{mpbenchmark} solution.},
 	label={lst:main_file_cpp}
 	]
-	int main(int argc, char *argv[]){
-		int engine{};
-		int numThreads{};
+int main(int argc, char *argv[]){
+	int engine{};
+	int numThreads{};
 		
-		if (argc > 1) {
-			engine = std::atoi(argv[1]); // Convert the argument to an integer
-		}
-		
-		if (argc > 2) {
-			numThreads = std::atoi(argv[2]); // Convert the argument to an integer
-		}
-		
-		// If the number of threads is not specified, default to the maximum available
-		if (numThreads == 0) {
-			numThreads = std::thread::hardware_concurrency();
-		}
-		
-		// ignore the other remaining code...
+	if (argc > 1) {
+		engine = std::atoi(argv[1]); // Convert the argument to an integer
 	}
+		
+	if (argc > 2) {
+		numThreads = std::atoi(argv[2]); // Convert the argument to an integer
+	}
+		
+	// If the number of threads is not specified, default to the maximum available
+	if (numThreads == 0) {
+		numThreads = std::thread::hardware_concurrency();
+	}	
+		// ignore the other remaining code...
+}
 \end{lstlisting}
 
 
-To compile and link the application, the industry standard \texttt{CMake}[insert citation] software was used. In the \texttt{CMakeLists.txt}(the file used for building the project), the key aspects were specifying the \texttt{C++20} standard, including the \texttt{fmt} library and compilation with the \texttt{-O2} flag. This compilation flag was also used by the authors of \texttt{mpbenchmark}\cite{mpbenchmark_paper} therefore it was used in the proposed solution for consistency. 
+To compile and link the application, the industry standard \texttt{CMake}\cite{cmake_about} software was used. In the \texttt{CMakeLists.txt}(the file used for building the project), the key aspects were specifying the \texttt{C++20} standard, including the \texttt{fmt} library and compilation with the \texttt{-O2} flag. This optimisation flag was also used by the authors of \texttt{mpbenchmark}\cite{mpbenchmark_paper} therefore it was used in the proposed solution for consistency. 
+
+To further enhance the performance of the \texttt{mpbenchmark}, the \texttt{Valgrind/Callgrind} function profiler tool was deployed to find potential bottlenecks. \texttt{Callgrind} profiling results showed that part of the application where it approximates the value of $\pi$ had the highest self-cost. This code snippet is shown in the listing ~\ref{lst:pi_approximation_1} below:
+
+\begin{lstlisting}[
+	caption={Part of the code with the highest self-cost. It approximate $\pi$ using numerical integration.},
+	label={lst:pi_approximation_1}
+	]
+// initialise variables for the pi calculation
+const long num_steps = 1000000;
+double step = 1.0 / static_cast<double>(num_steps);
+double x{}, pi{}, sum{};
+
+// performing numerical integration using the midpoint Riemann sum
+for (int i = 0; i < num_steps; i++) {
+	x = (i + 0.5) * step;
+	sum += 4.0 / (1.0 + x * x);
+}
+pi = sum * step;
+\end{lstlisting}
+
+The problem with this part of the code is that it already part of the parallel regions where it is executed by each thread. It may seen like a good candidate for applying parallel \texttt{for loop} from the OpenMP library however creating nested threads beyond the number of threads available on the system does not always lead to higher performance and in many cases can degrade performance. Another way to improve performance is by using SIMD intrinsics, this a programming tool to improve single-threaded or sequential performance of a code it stands for ``Single Instruction Multiple Data". By using these intrinsics, programmers can write code that processes data in parallel directly within a single CPU cycle. An advantage of using \texttt{C++}(and/or \texttt{C}) is that SIMD intrinsics can be deployed whereas higher level languages like \texttt{Java} or \texttt{C\#} make it very difficult to access these. 
+
+SIMD intrinsics vary by the target CPU, \texttt{x86} processors (which are found in most laptop and desktops) use \texttt{AVX2} instructions whereas \texttt{ARM} processors(commonly found in Apple products and embedded devices) use \texttt{NEON} instructions. In this project we need to use both as our proposed \texttt{C++} solution will be deployed on both desktop(\texttt{x86} processor) and Raspberry Pi devices(\texttt{ARM} based processor). The SIMD enhanced code can be summarised algorithmatically in the following steps:
+
+\begin{enumerate}
+	\item Initialise \texttt{256-bit} wide vectors: each vector can hold four double-precision(\texttt{64-bit}) floating point numbers.
+	\item Loop over number of steps: 
+\end{enumerate}
+
 
 \subsection{Objective 2: \texttt{MobileNet}}
 \subsection{Objective 3: \texttt{Debate-FI platform}}

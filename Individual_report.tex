@@ -5,6 +5,9 @@
 \documentclass[12pt]{article}
 \usepackage[top=2.2cm, left=2.2cm, bottom=1.6cm, right=1.8cm]{geometry} % Custom margins
 
+\usepackage{pdfpages}
+\usepackage{appendix}
+
 \usepackage{listings}
 \usepackage{xcolor}
 
@@ -124,13 +127,14 @@ The inaugural objective of the main project focuses on the enhancement of a mult
 
 The secondary objective of this project centres on enhancing the performance of \texttt{MobileNet}, a specialised machine learning algorithm within the realm of convolutional neural networks (\texttt{CNNs}). \texttt{MobileNet} excels in the field of image classification, a process in which the algorithm is provided with an image and tasked with determining the image's corresponding class. While the intricate mathematical foundations and specific operational details of \texttt{MobileNet} are beyond the scope of this discussion, the primary focus is set on augmenting its efficiency. Originally designed as a sequential algorithm, \texttt{MobileNet} primarily operates on a single CPU core, which poses limitations on its execution speed and scalability. In pursuit of addressing these constraints, this project endeavours to transform the existing \texttt{C++} implementation of \texttt{MobileNet} into a multi-threaded architecture. By doing so, the aim is to significantly decrease its runtime and enhance its scalability, thereby optimizing the algorithm's performance for more robust and efficient image classification tasks. This effort to transition \texttt{MobileNet} from a sequential to a multi-threaded model represents a strategic move to leverage the capabilities of modern multi-core processors, ensuring a more responsive and efficient computational process.
 
-The project's third objective is dedicated to the optimisation of a graphical user interface (\texttt{GUI}) application designed for microcontroller (\texttt{MCU}) testing, with a focus on minimising application runtime and bolstering its scalability. Named the \texttt{Debate-FI} platform, this application is crafted in \texttt{Python} and leverages both multi-threading and multi-processing techniques to achieve parallelism and concurrency. It's crucial to distinguish between concurrency and parallelism; in a concurrent framework, tasks are initiated, executed, and completed in overlapping intervals, without necessitating simultaneous operation. The operational flow of the \texttt{Debate-FI} platform involves the user connecting \texttt{MCUs} to a computer, after which the application dispatches specific commands to these \texttt{MCUs}. Following the transmission of commands, the platform awaits responses from the \texttt{MCUs} and proceeds to log the requisite data into output files. Among the three applications addressed in this project, the \texttt{Debate-FI} platform emerges as the most intricate, a complexity attributable to both the scale and the sophisticated nature of its functions. This optimisation effort aims to streamline these extensive operations, enhancing the application's performance and user experience.
+The project's third objective is dedicated to the optimisation of a graphical user interface (\texttt{GUI}) application designed for microcontroller (\texttt{MCU}) testing, with a focus on minimising application runtime and bolstering its scalability. Named the \texttt{DeBaTE-FI} platform, this application is crafted in \texttt{Python} and leverages both multi-threading and multi-processing techniques to achieve parallelism and concurrency. It's crucial to distinguish between concurrency and parallelism; in a concurrent framework, tasks are initiated, executed, and completed in overlapping intervals, without necessitating simultaneous operation. The operational flow of the \texttt{DeBaTE-FI} platform involves the user connecting \texttt{MCUs} to a computer, after which the application dispatches specific commands to these \texttt{MCUs}. Following the transmission of commands, the platform awaits responses from the \texttt{MCUs} and proceeds to log the requisite data into output files. Among the three applications addressed in this project, the \texttt{DeBaTE-FI} platform emerges as the most intricate, a complexity attributable to both the scale and the sophisticated nature of its functions. This optimisation effort aims to streamline these extensive operations, enhancing the application's performance and user experience.
 
 The structure of the report is organized as follows: it starts with a literature review, followed by methodology, results, and discussion sections. Appendices are provided after the conclusion for additional reference. The literature review section places the research within the existing body of knowledge by reviewing and interpreting relevant studies pertinent to the research question. This establishes a foundation for understanding the contributions of the project to the field. The methodology section outlines the strategies used to identify performance bottlenecks and potential optimization points within the software, including the introduction of new software designs. These are primarily illustrated through Unified Modeling Language (UML) diagrams and selected code snippets, offering a clear depiction of the proposed solutions. Following the methodology, the results and discussion sections report and analyse the findings from experiments conducted on both desktop and embedded processors, specifically targeting Raspberry Pi models 3 through 5. The findings are presented through benchmark runtime and speedup plots, providing a quantitative evaluation of the performance improvements. In the discussion section, the implications of these results are explored, evaluating the efficiency of the implemented optimizations and proposing directions for future research. This section seeks to provide an in-depth analysis that links the empirical findings with broader theoretical considerations. The appendices serve as a repository for supplementary materials, including details on the experimental PC setup, system specifications, and extended code snippets. These resources offer readers a deeper understanding of the technical aspects of the research, supporting the report's goals of transparency and reproducibility. 
 
 \newpage
-\section{Literature Review}
+\section{Literature review}
 \input{literature_review.tex}
+
 
 \newpage
 \section{Methodology}
@@ -140,12 +144,19 @@ The structure of the report is organized as follows: it starts with a literature
 
 \subsection{Objective 1: \texttt{mpbenchmark}}
 \subsection{Objective 2: \texttt{MobileNet}}
-\subsection{Objective 3: \texttt{Debate-FI platform}}
+\subsection{Objective 3: \texttt{DeBaTE-FI platform}}
 
 \section{Conclusion}
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
+\addcontentsline{toc}{section}{References}  % Add this line
+
+
+% Input the appendix file here
+\begin{appendices}
+	\input{appendix.tex}
+\end{appendices}
 
 \end{document}
 

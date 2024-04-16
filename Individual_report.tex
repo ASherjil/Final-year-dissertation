@@ -116,7 +116,7 @@ Your abstract here
 \tableofcontents
 \newpage
 
-\section{Introduction}
+\section{Introduction(3-5 pages)}
 The objective of this project is to enhance the performance of specific applications through parallel computing and to examine their efficiency on both desktop and embedded central processing units (CPUs). Parallel computing is a methodology employed in software development that enables certain segments of code to execute simultaneously, thereby diminishing the overall execution time of an application and augmenting its scalability. Contemporary processors boast a multi-core architecture, integrating multiple CPUs within a single chip, which is pivotal for facilitating parallelism.  
 
 Parallelism can be achieved via multi-threading and multi-processing techniques. A process refers to an active instance of a computer program, encompassing the program's code and its ongoing activities. Each process operates within its distinct memory address space and system resources, maintaining independence from other processes. However, processes can engage in communication with one another through various inter-process communication (IPC) mechanisms. Conversely, a thread represents the minimal unit of processing within a process. It executes within a process's context, sharing the process’s resources like memory and file descriptors, yet it retains its distinct execution state, including the program counter, register set, and stack. Threads can facilitate the parallel execution of code segments within a single process. 
@@ -132,21 +132,21 @@ The project's third objective is dedicated to the optimisation of a graphical us
 The structure of the report is organized as follows: it starts with a literature review, followed by methodology, results, and discussion sections. Appendices are provided after the conclusion for additional reference. The literature review section places the research within the existing body of knowledge by reviewing and interpreting relevant studies pertinent to the research question. This establishes a foundation for understanding the contributions of the project to the field. The methodology section outlines the strategies used to identify performance bottlenecks and potential optimization points within the software, including the introduction of new software designs. These are primarily illustrated through Unified Modeling Language (UML) diagrams and selected code snippets, offering a clear depiction of the proposed solutions. Following the methodology, the results and discussion sections report and analyse the findings from experiments conducted on both desktop and embedded processors, specifically targeting Raspberry Pi models 3 through 5. The findings are presented through benchmark runtime and speedup plots, providing a quantitative evaluation of the performance improvements. In the discussion section, the implications of these results are explored, evaluating the efficiency of the implemented optimizations and proposing directions for future research. This section seeks to provide an in-depth analysis that links the empirical findings with broader theoretical considerations. The appendices serve as a repository for supplementary materials, including details on the experimental PC setup, system specifications, and extended code snippets. These resources offer readers a deeper understanding of the technical aspects of the research, supporting the report's goals of transparency and reproducibility. 
 
 \newpage
-\section{Literature review}
+\section{Literature review(6-10 pages)}
 \input{literature_review.tex}
 
 
 \newpage
-\section{Methodology}
+\section{Methodology(5-7 pages)}
 \input{methodology.tex}
 
-\section{Results and Discussion}
+\section{Results and Discussion(8-10 pages)}
 
 \subsection{Objective 1: \texttt{mpbenchmark}}
 \subsection{Objective 2: \texttt{MobileNet}}
 \subsection{Objective 3: \texttt{DeBaTE-FI platform}}
 
-\section{Conclusion}
+\section{Conclusion(2-4 pages)}
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

@@ -1,11 +1,11 @@
-\subsection{Introduction}
+\section{Introduction}
 The research topic focuses on parallel computing to optimize algorithms for both desktop and embedded CPUs. Parallel computing is widely regarded as a complex area within engineering and computer science. To develop or enhance multi-threaded solutions, a thorough understanding of the underlying algorithms and the specific goals of the application is crucial. This foundational knowledge is essential before attempting any modifications to ensure that changes do not deviate from the application’s original objectives. In our project, we concentrate on three applications: \texttt{mpbenchmark}, \texttt{MobileNet}, and \texttt{DeBaTE-FI} platform. It is imperative to understand the background and functionality of these applications by utilising the existing publications centred around them. 
 
 Another goal of the literature review is to identify existing solutions to avoid duplicating efforts. Adherence to programming best practices is also a critical aspect of the project, given the complexity of parallel computing. This project strives to ensure that all developed software solutions conform to the best practices and guidelines recommended by industry experts, necessitating a comprehensive literature review.
 
 The literature review is structured to support the report's overall organization, with individual subsections dedicated to the three main objectives, the review covers providing background information, reviewing current research, and offering critical analysis. The review then explores build systems, focusing on how this project aims to develop cross-platform applications that can operate on different operating systems such as \texttt{Linux}, \texttt{Windows}, or \texttt{macOS}. Further research is directed towards software design and multi-threading in line with modern \texttt{C++} guidelines, including discussions on relevant libraries, tools, and research on parallel algorithms. The conclusion section summarizes the findings from the preceding sections and underscores the significance of the reviewed literature to the research question.
 
-\subsection{Objective 1: \texttt{mpbenchmark}}
+\section{Objective 1: \texttt{mpbenchmark}}
 % Brief overview and relevance to the project 
 % Discussion of methodologies used in the studies.
 % Summary of major findings related to the theme.
@@ -25,7 +25,7 @@ The authors of \texttt{mpbenchmark}\cite{mpbenchmark_paper} highlighted several 
 
 In the second paper\cite{mpbenchmark_paper} several limitations were found. Firstly, the data collection, based on just 30 runs, may be insufficient, especially for applications with minimal execution times on high-end CPUs. Additionally, the research focused solely on desktop CPUs and a system simulator mimicking a high-end 128-core CPU, excluding experiments on embedded or lower-end CPUs. Furthermore, given the superior performance of compiled languages like C and Ada, further research could beneficially explore comparisons with \texttt{C++}, another compiled language often regarded as superior to both C and Ada in certain contexts. This paper lays a solid foundation for our project, where its limitations present opportunities for further investigation, and its methodological approaches offer a model for emulation.
 
-\subsection{Objective 2: \texttt{MobileNet}}
+\section{Objective 2: \texttt{MobileNet}}
 % Brief overview and relevance to the project 
 % Discussion of methodologies used in the studies.
 % Summary of major findings related to the theme.
@@ -43,7 +43,7 @@ For the practical component of our project, a \texttt{C++} implementation of \te
 
 The \texttt{C++} implementation comprises several header and source files but lacks build software or instructions, which poses a significant initial hurdle. Moreover, the implementation features a method for testing custom images against 12 predefined classes. However, these class names are in Chinese, necessitating translation into English for broader accessibility. Setting up and running the project before making any enhancements will be challenging. Nevertheless, this \texttt{C++} implementation presents a valuable opportunity to apply parallelisation techniques to improve the efficiency of the widely recognized \texttt{MobileNet} algorithm.
 
-\subsection{Objective 3: \texttt{DeBaTE-FI platform}}
+\section{Objective 3: \texttt{DeBaTE-FI platform}}
 % Brief overview and relevance to the project 
 % Discussion of methodologies used in the studies.
 % Summary of major findings related to the theme.
@@ -57,11 +57,13 @@ The authors observed that increasing the number of MCUs reduced overall runtime.
 
 Despite the innovative approach of \texttt{DeBaTE-FI}, the platform is hindered by several significant limitations. The primary issue is its lengthy runtime, which can extend to several minutes, suggesting the presence of performance bottlenecks. Moreover, the performance on embedded Linux devices, such as \texttt{Rock 4C}, is modest, highlighting the need for optimization across both desktop and embedded Linux devices (or single-board computers). Additionally, the utilization of \texttt{OpenOCD} for MCU communication presents an opportunity to enhance efficiency and expedite processes. The central goal of our project is to tackle these issues by improving the runtime efficiency and scalability of \texttt{DeBaTE-FI}.
 
-\subsection{Cross platform build systems}
+\section{Cross platform build systems}
+When researching cross platform build systems this is an area of software engineering that is rapidly evolving therefore finding peer reviewed publications was a difficult task. Instead research was conducted using online blogs and relevant books. Since our project focuses on creating \texttt{C++} applications, there is a need to automate the building and compiling process. There exists many tools that allow for this to happen. Moreover the project also must ensure that the applications created work on multiple operating systems such Linux, Windows or macOS. This is important as Linux maybe the go to operating system for most developers, the majority of computers nowadays run Windows. Cross platform simply means that the application is able to run on multiple operating systems.  
 
-\subsection{\texttt{C++} guidelines and best practices}
 
-\subsection{Conclusion}
+\section{\texttt{C++} guidelines and best practices}
+
+\section{Conclusion}
 Summarize the main findings and debates covered in the review.
 Reiterate the importance of the existing literature to your research question.
 Outline how your research is positioned within the academic field based on your review.

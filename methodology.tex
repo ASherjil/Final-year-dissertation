@@ -44,7 +44,7 @@ To compile and link the application, the industry standard \texttt{CMake}\cite{c
 To further enhance the performance of the \texttt{mpbenchmark}, the \texttt{Valgrind/Callgrind} function profiler tool was deployed to find potential bottlenecks. \texttt{Callgrind} profiling results showed that part of the application where it approximates the value of $\pi$ had the highest self-cost. This code snippet is shown in the listing ~\ref{lst:pi_approximation_1} below:
 
 \begin{lstlisting}[
-	caption={Part of the code with the highest self-cost. It approximate $\pi$ using numerical integration.},
+	caption={Part of the code with the highest self-cost. It approximates $\pi$ using numerical integration.},
 	label={lst:pi_approximation_1}
 	]
 // initialise variables for the pi calculation
@@ -127,4 +127,10 @@ As discussed, to utilize SIMD intrinsics on Raspberry Pi devices, \texttt{NEON} 
 In summary, for desktop (\texttt{x86}) processors, two main solutions have been developed: a novel \texttt{C++} solution and a SIMD-enhanced \texttt{C++} solution as discussed in Listing~\ref{lst:pi_approximation_2}. For the Raspberry Pi devices, three solutions have been created: the first is the novel \texttt{C++} solution, identical to that on the desktop, and the other two are the SIMD-enhanced versions utilizing \texttt{NEON} instructions with single and double precision floating point variables.
 
 \section{Objective 2: \texttt{MobileNet}}
+% Step 1: MobileNet setup
+% Step 2: Valgrind results
+% Step 3: OpenMP parallelisations and SIMD
+% Step 4: Raspberry Pi different compilations
+
+
 \section{Objective 3: \texttt{DeBaTE-FI platform}}

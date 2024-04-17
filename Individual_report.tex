@@ -2,7 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 %
-\documentclass[12pt]{book}
+\documentclass[12pt, openany]{book}
 \usepackage[top=2.2cm, left=2.2cm, bottom=1.6cm, right=1.8cm]{geometry} % Custom margins
 
 \usepackage{pdfpages}
@@ -112,20 +112,43 @@
 	\renewcommand{\footrulewidth}{0pt}
 }
 
+\renewcommand{\bibname}{References}
+
+\usepackage{titlesec}
+
+% Formatting the chapter title to remove "Chapter X"
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{}{0pt}{\Huge}
+
+
 \begin{document}
-\title{Individual Project Final Report}
-\maketitle
+\begin{titlepage}
+	\centering
+	% Title
+	\vspace*{1cm} % Adjust the vertical space as needed
+	{\Huge\bfseries Individual Project\\[0.5cm] Final Report\par}
+	
+	% Reset centering to left-align the rest
+	\raggedright
+	% ID Number
+	ID Number: B820928\par
+	
+	% Programme
+	Programme: Electronic and Electrical Engineering MEng\par
+	
+	% Module Code
+	Module Code: 23WSD030/23WS50META\par
+	
+	% Project Title
+	Project Title: Thread by Thread: Benchmarking and Comparing the Executions of Multi-threaded Applications on Multi-core Architectures.\par
+	
+	% Abstract Heading
+	\textbf{Abstract:}\par % Making 'Abstract' bold
+	% Abstract Text
+	Your abstract here.
+	
+\end{titlepage}
 
-ID Number: B820928
-
-Programme: Electronic and Electrical Engineering MEng
-
-Module Code: 23WSD030/23WS50META
-
-Project Title: Thread by Thread: Benchmarking and Comparing the Executions of Multi-threaded Applications on Multi-core Architectures.
-
-Abstract:
-Your abstract here
 
 \newpage
 \tableofcontents
@@ -159,17 +182,23 @@ The structure of the report is organized as follows: it starts with a literature
 \section{Objective 2: \texttt{MobileNet}}
 \section{Objective 3: \texttt{DeBaTE-FI platform}}
 
-\chapter{Conclusion(2-4 pages)}
+\chapter{Conclusion(2 pages)}
+% Your conclusion content here.
 
+% Start a new page for the bibliography and add it to the ToC.
+\clearpage % This ensures the page is moved forward before adding the ToC entry.
+\addcontentsline{toc}{chapter}{References}  % Add References to ToC as a chapter.
 \bibliographystyle{IEEEtran}
-\bibliography{references}
-\addcontentsline{toc}{section}{References}  % Add this line
+\bibliography{references} % This now correctly aligns with the ToC link.
 
-
-% Input the appendix file here
+% Appendices
+\clearpage % Start a new page for the appendices.
+\addcontentsline{toc}{chapter}{Appendices}  % Add Appendices to ToC as a chapter.
 \begin{appendices}
 	\input{appendix.tex}
 \end{appendices}
+
+
 
 \end{document}
 

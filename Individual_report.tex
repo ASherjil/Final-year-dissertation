@@ -11,22 +11,33 @@
 \usepackage{listings}
 \usepackage{xcolor}
 
+\usepackage{float}
+
+
+\usepackage{cite} % for IEEE citation format
+
+% Define colors for syntax highlighting
+\definecolor{commentcolor}{gray}{0.5}
+\definecolor{keywordcolor}{rgb}{0,0,1}
+\definecolor{stringcolor}{rgb}{0.58,0,0.82}
+
+% Listing settings
 \lstset{
 	language=C++,  % Set the language
-	basicstyle=\fontsize{10pt}{12pt}\selectfont\ttfamily,  % Set font style and size to 10pt with a normal line spacing of 12pt
+	basicstyle=\ttfamily\fontsize{10pt}{12pt}\selectfont,  % Set font style and size to 10pt with a normal line spacing of 12pt
 	breaklines=true,  % Automatic line breaking
-	breakatwhitespace=false,  % Break lines at whitespace
-	postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},  % Mark where text has been broken
 	captionpos=b,  % Caption at the bottom
 	numbers=left,  % Line numbers on the left
 	numberstyle=\tiny\color{gray},  % Styling for the line numbers
-	numbersep=5pt,  % Reduced space between line numbers and code
+	numbersep=5pt,  % Space between line numbers and code
 	xleftmargin=5pt,  % Margin on the left outside the frame
 	frame=none,  % No frame around the code
-	framesep=0pt,  % No padding between frame and code, irrelevant now without frame
 	showstringspaces=false,  % Don't show spaces in strings with special character
 	tabsize=4,  % Size of tabs
-	% linewidth=\textwidth  % Removed as this is not a valid option
+	commentstyle=\color{commentcolor}\ttfamily,
+	keywordstyle=\color{keywordcolor}\bfseries\ttfamily,  % Bold for keywords
+	stringstyle=\color{stringcolor}\ttfamily,
+	morecomment=[l][\color{magenta}]{\#}
 }
 
 \usepackage{fontspec}

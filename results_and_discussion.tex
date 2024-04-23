@@ -1,0 +1,93 @@
+\section{Objective 1: \texttt{mpbenchmark}}
+
+Results from the proposed solution collected from desktop(\texttt{x86} processor) are shown below, they are presented in the legend ``C++" and ``C++(SIMD Optimised)". A benchmark plot along with a speedup plot are shown in figures ~\ref{fig:mpbenchmark_desktop_plot} and ~\ref{fig:mpbenchmark_desktop_speedup_plot} respectively. Full system specifications of the desktop(\texttt{x86}) along with the Raspberry Pi processors can be found in the appendix.
+
+\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_desktop.png} % Adjust the path and width as needed
+	\caption{Mean benchmark plot of \texttt{mpbenchmark} collected from \texttt{x86} processor in seconds. The error bars represent 95\% confidence interval. (Lower is better).}
+	\label{fig:mpbenchmark_desktop_plot} % Use this label to reference the figure
+\end{figure}
+
+
+\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_desktop_speedup.png} % Adjust the path and width as needed
+	\caption{Speedup plot collected from \texttt{x86} processor. The vertical black line shows the maximum physical cores of the processor. (Higher is better).}
+	\label{fig:mpbenchmark_desktop_speedup_plot} % Use this label to reference the figure
+\end{figure}
+
+On desktop(\texttt{x86}) processor, \texttt{AVX2} instructions were used to implement SIMD intrinsics therefore we compare the decimal precision with the original unoptimised SIMD code, see table ~\ref{tab:c++_avx2_pi}.
+
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Programming language/configuration} & \textbf{Decimal value of $\pi$} & \textbf{Mean run time using maximum threads(s)} \\ \hline
+		\texttt{C++}             & 3.1415926535897643 & 0.011577 \\ \hline
+		\texttt{C++/AVX2}   & 3.1415926535899033 &  0.007659  \\ \hline
+		\texttt{C}                 & 3.1415926535897643 & 0.002173 \\ \hline
+		\texttt{Ada}             & 3.1415926535897643 & 0.008623 \\ \hline
+	\end{tabular}
+	\label{tab:c++_avx2_pi}
+	\caption{Comparing the decimal precision of the \texttt{AVX2} enhanced solution with the original.}
+\end{table}
+
+% Talk about C++ solution outperforming the original in both run times and speedup 
+% C++ SIMD enhanced outperformed even more with a lower speedup.
+% Talk about SMT's benefits if any
+% Discuss AVX2's decimal precision
+
+Results obtained from the latest Raspberry Pi 5 (\texttt{Cortex A-76} processor) are shown in figures ~\ref{fig:mpbenchmark_rpi5_plot} and ~\ref{fig:mpbenchmark_rpi5_speedup_plot}. The results obtained from the Raspberry Pi 4(\texttt{Cortex A-72} processor) are shown in figures ~\ref{fig:mpbenchmark_rpi4_plot} and ~\ref{fig:mpbenchmark_rpi4_speedup_plot}.
+
+\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi5.png} % Adjust the path and width as needed
+	\caption{Mean benchmark plot of results collected from Raspberry Pi 5(in seconds). The error bars represent 95\% confidence interval. (Lower is better).}
+	\label{fig:mpbenchmark_rpi5_plot} % Use this label to reference the figure
+\end{figure}
+
+\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi5_speedup.png} % Adjust the path and width as needed
+	\caption{Speedup plot collected from Raspberry Pi 5 processor. The vertical black line shows the maximum physical cores of the processor. (Higher is better).}
+	\label{fig:mpbenchmark_rpi5_speedup_plot} % Use this label to reference the figure
+\end{figure}
+
+\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi4.png} % Adjust the path and width as needed
+	\caption{Mean benchmark plot of results collected from Raspberry Pi 4(in seconds). The error bars represent 95\% confidence interval. (Lower is better).}
+	\label{fig:mpbenchmark_rpi4_plot} % Use this label to reference the figure
+\end{figure}
+
+\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi4_speedup.png} % Adjust the path and width as needed
+	\caption{Speedup plot collected from Raspberry Pi 4 processor. The vertical black line shows the maximum physical cores of the processor. (Higher is better).}
+	\label{fig:mpbenchmark_rpi4_speedup_plot} % Use this label to reference the figure
+\end{figure}
+
+The decimal precision of using single and double precision floating point \texttt{NEON} instructions on the Raspberry Pi processors is compared in table ~\ref{tab:c++_neon_pi}.
+
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{Programming language/configuration} & \textbf{Decimal value of $\pi$} & \textbf{Run time RPI5(s)} & \textbf{Run time RPI4(s)} \\ \hline
+		\texttt{C++}                                                   & 3.1415926535897643 & 0.028356  & 0.115569 \\ \hline
+		\texttt{C++/single-precision NEON}                & 3.141531467437744   &  0.016477 & 0.056352 \\ \hline
+		\texttt{C++/double-precision NEON}               & 3.14159265358986     & 0.033399  & 0.116423 \\ \hline
+		\texttt{C}                                                       &  3.1415926535897643 & 0.031107  & 0.116538\\ \hline 
+		\texttt{Ada}                                                    & 3.1415926535897643  & 0.029549  & 0.117536 \\ \hline
+	\end{tabular}
+	\label{tab:c++_neon_pi}
+	\caption{Comparing the decimal precision of the \texttt{NEON} enhanced solutions. RPI5 - Raspberry Pi 5, RPI4- Raspberry Pi 4. Mean benchmark time in seconds collected using maximum cores on the system(4 cores).}
+\end{table}
+
+% Talk about the proposed solution's performance in PI5 and PI4. 
+% Talk about the speedup
+% Talk about NEON solutions and their respective decimal precision.
+% Can include the comparision with other solutions in the appendix, like Java and C# and Raspberry Pi 3 
+
+% Round up results and discuss and further research/propositions 

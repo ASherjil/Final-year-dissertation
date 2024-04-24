@@ -176,7 +176,7 @@ The results for Raspberry Pi 5 are shown in figures ~\ref{fig:mobilenet_rpi5_plo
 		% Row 5
 		Performance gain versus original(\%)&87.2&65.2 & 59.90\\
 		% Row 6
-		Performance gain across CPU(\%)&90.8 &58.2 &0 \\
+		Performance gain versus RPI4(\%)&90.8 &58.2 &0 \\
 		\bottomrule
 	\end{tabular}
 	\caption{Comparing performance metrics across CPUs.}
@@ -186,3 +186,56 @@ The results for Raspberry Pi 5 are shown in figures ~\ref{fig:mobilenet_rpi5_plo
 The results indicate that the optimal configuration for the Raspberry Pi 5 is \texttt{3\_Parallel\_Regions} without the use of SIMD optimisations. This resulted in the lowest run time and best overall speedup when compared to other configurations. For the Raspberry Pi 4 the results were harder to interpret, the lowest run time was achieved with \texttt{2\_Parallel\_Regions} but the best speedup was achieved with \texttt{2\_Parallel\_Regions\_SIMD}. Surprisingly SIMD optimisations on both of the Raspberry Pi devices did not result in a reduction in run time contrary to what was observed in objective 1. When comparing the two processors the \texttt{Cortex A-76} performed 58\% faster and offered the best performance with three parallel regions and also achieved a slightly better speedup(\texttt{2.86} versus \texttt{2.76}). Summarised results can be found in table ~\ref{tab:performance_comparison}. These results indicate that the \texttt{Cortex A-76} is better able to take advantage of parallelised regions. 
 
 Contrasting to the Raspberry Pi devices the best performance on desktop was achieved with 3 parallel regions and SIMD optimisations. This presents an interesting challenge to the developer when porting this application on embedded devices, results collected from the Raspberry Pi devices showcase the need for tailoring the multi-threading architecture according to the target CPU to achieve optimal performance. Strangely the SIMD optimisations from the \texttt{OpenMP} library did not improve performance on the Raspberry Pi devices, this can be further investigated by manually implementing \texttt{NEON} instructions and compare its effects, similar to the method in objective 1. Both of the Raspberry Pi devices required slightly different configurations to achieve optimal performance. Optimal performance would be crucial in embedded processors part of drones and/or unnamed aerial vehicles(UAVs)\cite{drones_UAV_MLDL}. 
+
+\section{Objective 3: \texttt{DeBaTE-FI} platform}
+% First talk about the results collected from pc and using 4 STM32 boards 
+% Explain the legend of the plots both run time and speedup 
+% Then talk about the performance gain on the main setup 
+
+Results collected from the local setup using four \texttt{STM32F767ZI} boards are shown in the following plots. The legend of the plots in in figures ~\ref{fig:debate_fi_plot} and ~\ref{fig:debate_fi_speedup} represent:
+
+\begin{enumerate}
+	\item \texttt{Original} : the unchanged \texttt{DeBaTE-FI} platform application. 
+	\item \texttt{Python\_Optimised\_C++\_library} : the application with the optimised multi-processing design and using the \texttt{C++} \texttt{telnet} library.
+	\item \texttt{Python\_Optimised} : the application with the optimised multi-processing design with the original \texttt{Python} \texttt{telnet} library.
+	\item \texttt{Python\_Unoptimised\_C++\_library} : the application with the original architecture but with the \texttt{C++} \texttt{telnet} library.
+\end{enumerate}
+
+\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/debate_fi.png} % Adjust the path and width as needed
+	\caption{Benchmark plot comparing different solutions with runtime in minutes. (Lower is better).}
+	\label{fig:debate_fi_plot} % Use this label to reference the figure
+\end{figure}
+
+\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/debate_fi_speedup.png} % Adjust the path and width as needed
+	\caption{Speedup plot comparing the different solutions. (Higher is better).}
+	\label{fig:debate_fi_speedup} % Use this label to reference the figure
+\end{figure}
+
+The \texttt{Python\_Unoptimised\_C++\_library} solution achieved a 55\% reduction in runtime, reducing it to 1.45 minutes from 3.17 minutes. However, it resulted in a lower speedup compared to the original, likely due to the limited runtime achieved using only one board. Conversely, the \texttt{Python\_Optimised} solution delivered the most substantial reduction in runtime of 62\% (1.20 minutes compared to 3.17 minutes). Despite this, it also exhibited a lower speedup, which began to degrade after the incorporation of 2 boards. These results were derived from only 5 test scenarios to mitigate the prolonged runtime of the application. The findings indicate that the \texttt{Python\_Optimised} solution reached a plateau, showing no further improvements beyond the use of 2 boards. This plateau may be attributed to the limited runtime where adding additional boards did not yield performance gains, suggesting that the optimal performance with this improved solution can be achieved using only 2 boards instead of 4.
+
+Surprisingly, no significant performance improvement was observed with the \texttt{Python\_Optimised\_C++\_library} solution. Given previous results, one might expect that integrating the \texttt{C++} library into the application would enhance performance, and that optimizing the multiprocessing design would further boost efficiency. Combining the two was anticipated to yield an even larger performance increase, yet this did not occur. In the \texttt{Python\_Optimised} solution, adding the \texttt{C++} library did not enhance performance; in fact, the performance was identical to when the \texttt{C++} library was not included. This outcome raises an intriguing question: why did only the original \texttt{DeBaTE-FI} platform benefit from integrating the \texttt{C++} library, while no performance gain was observed when the \texttt{C++} library was incorporated into the \texttt{Python\_Optimised} solution? Investigating this discrepancy will be crucial for future efforts to further optimize the software.
+
+All three developed solutions significantly improved the performance of the \texttt{DeBaTE-FI} platform. The \texttt{Python\_Optimised} solution is particularly convenient as it eliminates the need to compile the \texttt{C++} code into a shared library (\texttt{.so}) file. The \texttt{C++} class can be used in the application as the standard \texttt{telnet} library, replacing the older \texttt{Telnetlib} \texttt{Python} library which was deprecated in \texttt{Python 3.11} and is slated for removal in version \texttt{3.13}. Additionally, the \texttt{C++} library facilitates the creation of custom functions and allows for prioritization of performance. Therefore, this project proposes the use of the newly developed \texttt{C++} library (\texttt{Telnetlibcpp}) when the \texttt{DeBaTE-FI} platform's code is updated to accommodate later versions of \texttt{Python}.
+
+Results from the main setup (figure~\ref{fig:debate_fi_setup}) using the \texttt{Python\_Optimised} solution are presented in table~\ref{tab:debate_metrics}. A 43.5\% performance gain was observed, compared to the 62.1\% improvement noted in the local setup. This still represents a significant enhancement in performance. To further investigate the proposed solution, it would be beneficial to analyse results using a varying number of boards and their respective speed-ups in the main setup. This analysis could help determine the ideal number of boards for optimal performance. Additionally, no results were collected using single-board computers (SBCs) like the Raspberry Pi, primarily due to the time constraints of this project. Investigating the performance of the proposed solution on SBCs could be another valuable area of exploration.
+
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{@{}lcc@{}} % 'l' for left-aligned text, 'c' for centered text
+		\toprule
+		\textbf{Metric} & \textbf{Local setup} & \textbf{Main setup} \\
+		\midrule
+		\texttt{STM32} Test Boards & 4 & 36 \\
+		Test scenarios & 5 & 1000 \\
+		Original solution run time(min) & 3.17 & 234.47 \\
+		Optimised solution run time(min) & 1.20 & 132.4 \\
+		Performance improvement(\%) & 62.1 & 43.5 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Comparison of benchmark metrics on the local versus the main setup.}
+	\label{tab:debate_metrics}
+\end{table}

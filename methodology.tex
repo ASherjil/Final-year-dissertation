@@ -33,8 +33,6 @@ The \texttt{C++} object-oriented class design can be visualised using a UML clas
 	\label{fig:mpbenchmark_UML_diagram} % Use this label to reference the figure
 \end{figure}
 
-These classes are used in the following sequence in the proposed solution[insert UML sequence diagram]:
-
 The \texttt{mpbenchmark} implementation in the \texttt{C} language utilized the \texttt{printf} function for output throughout the application. Transitioning this functionality to \texttt{C++} posed a challenge, as \texttt{printf} relies on ``format string based" formatting, whereas \texttt{C++} typically uses ``stream-based" formatting through \texttt{std::cout}. This discrepancy was addressed in the \texttt{C++20} standard with the introduction of \texttt{std::format}. However, oddly enough, \texttt{std::format} was not supported by the \texttt{gcc} compiler version on the target system, despite it supporting the \texttt{C++20} standard\cite{std_format_gcc_compiler_version}. A workaround involved using the \texttt{fmt::print} function from the \texttt{fmt} library, which is noted as the inspiration behind \texttt{std::format}\cite{fmt_printing_library}. Detailed system specifications and a code snippet demonstrating the use of \texttt{fmt::print} are provided in the appendix.
 
 The original \texttt{mpbenchmark} code included a command line argument allowing the user (or developer) to specify the engine type for computations. The application supports three distinct engine types. Importantly, the number of threads the application employs can be modified using the \texttt{taskset} command in \texttt{Linux}, which determines the CPU cores the application can run on. To improve this functionality, a second command line argument was added in the proposed solution. This new parameter enables users to set the number of threads the application should use. If this argument is omitted, the application automatically defaults to the maximum number of threads available on the system. This enhancement is detailed in a code snippet in the appendix.
@@ -225,7 +223,7 @@ m_pfWeight = static_cast<float*>(aligned_alloc(alignment, weightSize));
 
 The \texttt{MobileNet} application was designed with three command line arguments. The first argument determines whether to classify only one image or all images in the \texttt{data} folder. The second argument specifies whether the runtime should be saved to a \texttt{.txt} file, and the third sets the number of threads used. For data collection, the time taken to classify a single image was recorded while varying the number of threads. The number of threads utilized by the application was adjusted using the command line and \texttt{OpenMP}'s \texttt{omp\_set\_num\_threads()} function. Additionally, \texttt{MobileNet} includes an option to save the application's runtime to a designated \texttt{.txt} file. For benchmarking, the project was compiled with the \texttt{-O3} optimisation flag and was executed 103 times with different thread counts; the runtime and speedup plots were derived from the average of the 100 timing results stored in the \texttt{.txt} file. The method of data collection largely mirrors the process shown in figure~\ref{fig:results_collection}, with the exception that the \texttt{taskset} command was not employed to adjust the number of CPU cores; instead, thread adjustments were made through the command line.
 
-\section{Objective 3: \texttt{DeBaTE-FI platform}}
+\section{Objective 3: \texttt{DeBaTE-FI} platform}
 % Talk about profiling the application 
 % C++ libraries for telnetpp and integration into the Debate-FI via Pybind-11
 % Multi-processing and mutli-threaidng design improvement 
@@ -285,5 +283,11 @@ The key in the above improved design is removing the redundant work done as prev
 	\label{fig:improved_application_design} % Use this label to reference the figure
 \end{figure}
 
+Results were collected using 4 \texttt{STM32F767ZI} MCUs for both of these solutions. In collaboration with Alex Henneman, results using the main setup(see figure ~\ref{fig:debate_fi_setup}) that utilised 36 MCUs running the second solution were also collected to verify the performance observed on the local setup. To collect benchmark data the application was run only once with varying number of boards and the run time was saved into a \texttt{.csv} file. The run time usually spanned in minutes thereby making multiple runs extremely time consuming, moreover the variation in run times was negligible unlike the applications in the first two objectives where the run times were in milliseconds and were more prone to variation. The benchmark collection strategy is similar to the one shown in figure ~\ref{fig:results_collection} except the application was run only once and the times were saved in a \texttt{.csv} file instead of a \texttt{.txt} file. 
 
-Results from both of these solutions are compared and analysed in the ``Results and Discussion" section. 
+\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=1\textwidth, height=15cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/debate_fi_setup.png} % Adjust the path and width as needed
+	\caption{\texttt{DeBaTE-FI} platform application on the main setup using 36 \texttt{STM32} boards\cite{debate_fi_publication}.}
+	\label{fig:debate_fi_setup} % Use this label to reference the figure
+\end{figure}

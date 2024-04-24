@@ -43,13 +43,13 @@ For the practical component of our project, a \texttt{C++} implementation of \te
 
 The \texttt{C++} implementation comprises several header and source files but lacks build software or instructions, which poses a significant initial hurdle. Moreover, the implementation features a method for testing custom images against 12 predefined classes. However, these class names are in Chinese, necessitating translation into English for broader accessibility. Setting up and running the project before making any enhancements will be challenging. Nevertheless, this \texttt{C++} implementation presents a valuable opportunity to apply parallelisation techniques to improve the efficiency of the widely recognized \texttt{MobileNet} algorithm.
 
-\section{Objective 3: \texttt{DeBaTE-FI platform}}
+\section{Objective 3: \texttt{DeBaTE-FI} platform}
 % Brief overview and relevance to the project 
 % Discussion of methodologies used in the studies.
 % Summary of major findings related to the theme.
 % Critical evaluation of the strengths, weaknesses, and gaps.
 
-The \texttt{DeBaTE-FI} platform, developed by PhD student Alex Henneman under the supervision of Dr. Luciano Ost at Loughborough University, is a GUI application detailed in the publication ``DeBaTE-FI: A Debugger-Based Fault Injector Infrastructure for IoT Soft Error Reliability Assessment." While not publicly available, this document can be accessed in appendix \ref{appendix:debate_fi}.
+The \texttt{DeBaTE-FI} platform, developed by PhD student Alex Henneman under the supervision of Dr. Luciano Ost at Loughborough University, is a GUI application detailed in the publication ``DeBaTE-FI: A Debugger-Based Fault Injector Infrastructure for IoT Soft Error Reliability Assessment"\cite{debate_fi_publication}.
 
 \texttt{DeBaTE-FI} was engineered to test embedded devices for soft errors—random errors in processors caused by background radiation, which can be particularly harmful in safety-critical systems. Testing methods for soft errors range from high-level analytical models, which are easier to implement but less accurate, to costly full radiation tests, which offer higher precision. \texttt{DeBaTE-FI} seeks to emulate the latter's accuracy by simulating soft errors in embedded devices. The platform utilized \texttt{Raspberry Pi 4} and \texttt{Rock 4C} to conduct tests on \texttt{STM32F7} microcontrollers (MCUs). The research involved running a neural network binary on these MCUs, measuring the execution time across various testing scenarios, and using different numbers of MCUs to evaluate speed and efficiency. Additionally, the results from \texttt{DeBaTE-FI} were compared with those from simulation software to assess accuracy, and \texttt{OpenOCD} was used for MCU communication.
 

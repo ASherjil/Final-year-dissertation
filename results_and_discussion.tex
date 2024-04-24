@@ -159,3 +159,30 @@ The results for Raspberry Pi 5 are shown in figures ~\ref{fig:mobilenet_rpi5_plo
 	\caption{Speedup plot comparing different solutions with results collected from \texttt{Cortex A-72} processor. (Higher is better).}
 	\label{fig:mobilenet_rpi4_speedup} % Use this label to reference the figure
 \end{figure}
+
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{@{}lccc@{}}
+		\toprule
+		\textbf{Metric} & \textbf{Desktop} & \textbf{RPI5} & \textbf{RPI4} \\ \midrule
+		% Row 1
+		Original run time(ms)&1474.2&2462.33 &5108.77 \\
+		% Row 2
+		Lowest run time(ms)&188.24 &858.10 &2050.78 \\
+		% Row 3
+		Best speedup&5.26 &2.86 &2.79 \\
+		% Row 4
+		Optimal threads&8 &4 & 4\\
+		% Row 5
+		Performance gain versus original(\%)&87.2&65.2 & 59.90\\
+		% Row 6
+		Performance gain across CPU(\%)&90.8 &58.2 &0 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Comparing performance metrics across CPUs.}
+	\label{tab:performance_comparison}
+\end{table}
+
+The results indicate that the optimal configuration for the Raspberry Pi 5 is \texttt{3\_Parallel\_Regions} without the use of SIMD optimisations. This resulted in the lowest run time and best overall speedup when compared to other configurations. For the Raspberry Pi 4 the results were harder to interpret, the lowest run time was achieved with \texttt{2\_Parallel\_Regions} but the best speedup was achieved with \texttt{2\_Parallel\_Regions\_SIMD}. Surprisingly SIMD optimisations on both of the Raspberry Pi devices did not result in a reduction in run time contrary to what was observed in objective 1. When comparing the two processors the \texttt{Cortex A-76} performed 58\% faster and offered the best performance with three parallel regions and also achieved a slightly better speedup(\texttt{2.86} versus \texttt{2.76}). Summarised results can be found in table ~\ref{tab:performance_comparison}. These results indicate that the \texttt{Cortex A-76} is better able to take advantage of parallelised regions. 
+
+Contrasting to the Raspberry Pi devices the best performance on desktop was achieved with 3 parallel regions and SIMD optimisations. This presents an interesting challenge to the developer when porting this application on embedded devices, results collected from the Raspberry Pi devices showcase the need for tailoring the multi-threading architecture according to the target CPU to achieve optimal performance. Strangely the SIMD optimisations from the \texttt{OpenMP} library did not improve performance on the Raspberry Pi devices, this can be further investigated by manually implementing \texttt{NEON} instructions and compare its effects, similar to the method in objective 1. Both of the Raspberry Pi devices required slightly different configurations to achieve optimal performance. Optimal performance would be crucial in embedded processors part of drones and/or unnamed aerial vehicles(UAVs)\cite{drones_UAV_MLDL}. 

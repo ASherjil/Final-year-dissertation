@@ -1,5 +1,4 @@
 % Options for packages loaded elsewhere
-\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[12pt, openany]{book}
@@ -15,6 +14,14 @@
 \usepackage{array}  % for better column formatting
 
 \usepackage{cite} % for IEEE citation format
+
+% Adding titlesec package
+\usepackage{titlesec}
+
+% Redefining the chapter title format
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-50pt}{10pt}
 
 % Define colors for syntax highlighting
 \definecolor{commentcolor}{gray}{0.5}
@@ -126,6 +133,7 @@
 \renewcommand{\bibname}{References}
 
 \usepackage{titlesec}
+\usepackage{hyperref} % This should generally be the last package you load
 
 % Formatting the chapter title to remove "Chapter X"
 \titleformat{\chapter}[display]
@@ -138,7 +146,7 @@
 	% Title
 	\vspace*{1cm} % Adjust the vertical space as needed
 	{\Huge\bfseries Individual Project\\[0.5cm] Final Report\par}
-	
+	\vspace{2cm}
 	% Reset centering to left-align the rest
 	\raggedright
 	% ID Number
@@ -156,6 +164,7 @@
 	% Abstract Heading
 	\textbf{Abstract:}\par % Making 'Abstract' bold
 	% Abstract Text
+	% Background, aims, methods, results/conclusions.
 	Your abstract here.
 	
 \end{titlepage}
@@ -193,18 +202,18 @@ The structure of the report is organized as follows: it starts with a literature
 
 \chapter{Conclusion(2 pages)}
 % Your conclusion content here.
+\input{conclusion.tex}
 
-% Start a new page for the bibliography and add it to the ToC.
-\clearpage % This ensures the page is moved forward before adding the ToC entry.
-\addcontentsline{toc}{chapter}{References}  % Add References to ToC as a chapter.
+% Ensure bibliography starts on a new page and add it to the ToC.
+\addcontentsline{toc}{chapter}{References}
 \bibliographystyle{IEEEtran}
-\bibliography{references} % This now correctly aligns with the ToC link.
+\bibliography{references} % Assumes your bibliography is in the 'references.bib' file.
 
-% Appendices
-\clearpage % Start a new page for the appendices.
-\addcontentsline{toc}{chapter}{Appendices(Not completed)}  % Add Appendices to ToC as a chapter.
+% Ensure appendices start on a new page and add it to the ToC.
+\newpage
+\addcontentsline{toc}{chapter}{Appendices}
 \begin{appendices}
-	\input{appendix.tex}
+	\input{appendix.tex}  % Assuming this file contains your appendices.
 \end{appendices}
 
 

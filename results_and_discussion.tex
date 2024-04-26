@@ -42,34 +42,20 @@ The proposed \texttt{C++} solution outperformed the original implementations in 
 
 Another noteworthy observation is the lack of performance gain when scaling from 8 to 16 cores. The processor used supports simultaneous multi-threading (SMT), commonly branded as ``Hyper-threading" for Intel CPUs, which is typical in modern \texttt{x86} processors. SMT theoretically allows each physical core to execute two threads, and an 8-core processor with SMT would appear to have 16 cores. However, the proposed solutions, along with other compiled languages like \texttt{C} and \texttt{Ada}, showed negligible performance gains by utilizing the virtual cores. \texttt{Java} experienced a slight performance degradation, while \texttt{C\#} was the only language to demonstrate a performance increase. Using the results from the \texttt{x86} processor, we can conclude that the additional cores provided by SMT did not enhance performance and, in some cases, even degraded it.
 
-Results obtained from the latest Raspberry Pi 5 (\texttt{Cortex A-76} processor) are shown in figures ~\ref{fig:mpbenchmark_rpi5_plot} and ~\ref{fig:mpbenchmark_rpi5_speedup_plot}. The results obtained from the Raspberry Pi 4(\texttt{Cortex A-72} processor) are shown in figures ~\ref{fig:mpbenchmark_rpi4_plot} and ~\ref{fig:mpbenchmark_rpi4_speedup_plot}.
+Results obtained from the latest Raspberry Pi 5 (\texttt{Cortex A-76} processor) are shown in figures ~\ref{fig:mpbenchmark_rpi5_plot} and ~\ref{fig:mpbenchmark_rpi5_speedup_plot}. The results obtained from the Raspberry Pi 4(\texttt{Cortex A-72} processor) can be found in appendix (figures ~\ref{fig:mpbenchmark_rpi4_plot} and ~\ref{fig:mpbenchmark_rpi4_speedup_plot}).
 
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi5.png} % Adjust the path and width as needed
+	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi5.png} % Adjust the path and width as needed
 	\caption{Mean benchmark plot of results collected from Raspberry Pi 5(in seconds). The error bars represent 95\% confidence interval. (Lower is better).}
 	\label{fig:mpbenchmark_rpi5_plot} % Use this label to reference the figure
 \end{figure}
 
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi5_speedup.png} % Adjust the path and width as needed
+	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi5_speedup.png} % Adjust the path and width as needed
 	\caption{Speedup plot collected from Raspberry Pi 5 processor. The vertical black line shows the maximum physical cores of the processor. (Higher is better).}
 	\label{fig:mpbenchmark_rpi5_speedup_plot} % Use this label to reference the figure
-\end{figure}
-
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi4.png} % Adjust the path and width as needed
-	\caption{Mean benchmark plot of results collected from Raspberry Pi 4(in seconds). The error bars represent 95\% confidence interval. (Lower is better).}
-	\label{fig:mpbenchmark_rpi4_plot} % Use this label to reference the figure
-\end{figure}
-
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi4_speedup.png} % Adjust the path and width as needed
-	\caption{Speedup plot collected from Raspberry Pi 4 processor. The vertical black line shows the maximum physical cores of the processor. (Higher is better).}
-	\label{fig:mpbenchmark_rpi4_speedup_plot} % Use this label to reference the figure
 \end{figure}
 
 The decimal precision of using single and double precision floating point \texttt{NEON} instructions on the Raspberry Pi processors is compared in table ~\ref{tab:c++_neon_pi}.
@@ -112,7 +98,7 @@ After parallelising \texttt{MobileNet} the results collected from desktop(\textt
 	\label{fig:mobilenet_desktop_plot} % Use this label to reference the figure
 \end{figure}
 
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+\begin{figure}[H] % Positioning preference: here, top, bottom, page
 	\centering
 	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_desktop_speedup.png} % Adjust the path and width as needed
 	\caption{Speedup plot comparing the two solutions with results collected from \texttt{x86} processor. (Higher is better).}
@@ -130,7 +116,7 @@ The performance on the Raspberry Pi devices was a little more nuanced. The resul
 	\item \texttt{2\_Parallel\_Regions}: only two functions \texttt{ConvLayer::forward} and \texttt{BatchNormalLayer::forward} have been parallelised without SIMD optimisations.
 \end{enumerate}
 
-The results for Raspberry Pi 5 are shown in figures ~\ref{fig:mobilenet_rpi5_plot} and ~\ref{fig:mobilenet_rpi5_speedup}. The results for Raspberry Pi 4 are shown in figures ~\ref{fig:mobilenet_rpi4_plot} and ~\ref{fig:mobilenet_rpi4_speedup}. 
+The results for Raspberry Pi 5 are shown in figures ~\ref{fig:mobilenet_rpi5_plot} and ~\ref{fig:mobilenet_rpi5_speedup}. The results for Raspberry Pi 4 can be found in appendix (figures ~\ref{fig:mobilenet_rpi4_plot} and ~\ref{fig:mobilenet_rpi4_speedup}). 
 
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
@@ -146,19 +132,6 @@ The results for Raspberry Pi 5 are shown in figures ~\ref{fig:mobilenet_rpi5_plo
 	\label{fig:mobilenet_rpi5_speedup} % Use this label to reference the figure
 \end{figure}
 
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_rpi4.png} % Adjust the path and width as needed
-	\caption{Mean benchmark plot of results collected from \texttt{Cortex A-72} processor(in milliseconds). (Lower is better).}
-	\label{fig:mobilenet_rpi4_plot} % Use this label to reference the figure
-\end{figure}
-
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_rpi4_speedup.png} % Adjust the path and width as needed
-	\caption{Speedup plot comparing different solutions with results collected from \texttt{Cortex A-72} processor. (Higher is better).}
-	\label{fig:mobilenet_rpi4_speedup} % Use this label to reference the figure
-\end{figure}
 
 \begin{table}[htbp]
 	\centering

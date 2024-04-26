@@ -1,22 +1,5 @@
 \section{Objective 1: \texttt{mpbenchmark}}
-As mentioned in the introduction section \texttt{mpbenchmark} performs calculations of a jet engine using multiple threads and produces the time taken to complete these calculations as output. After analysing the code implementation of \texttt{mpbenchmark} the application can be summarised performing the following tasks:
-
-\begin{enumerate}
-	\item The application reads data from an input(\texttt{.txt}) file and stores that into an array before starting the calculations. This input data is required to perform calculations required in the next step. 
-	\item During calculation, each thread reads input data at specific positions of the input array. After calculation, the results are written into an output array.
-	\item In the last step, the benchmark’s response time along with deadlines missed is printed out and saved to an output(\texttt{.txt}) file. 
-\end{enumerate}
-
-This design of \texttt{mpbenchmark} can be visualised in figure \ref*{fig:revised_mpbenchmark_structure}.
-
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=0.5\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/revised_mpbenchmark_structure.png} % Adjust the path and width as needed
-	\caption{Revised \texttt{mpbenchmark} structure \cite{mpbenchmark_paper}.}
-	\label{fig:revised_mpbenchmark_structure} % Use this label to reference the figure
-\end{figure}
-
-The source code of \texttt{mpbenchmark} provided a solution in \texttt{C\#}, this served as a useful reference of how figure \ref*{fig:revised_mpbenchmark_structure} would be implemented in code using object-oriented design. Subsequently, the \texttt{C++} object oriented design comprised of three main classes:
+As mentioned in the introduction section \texttt{mpbenchmark} performs calculations of a jet engine using multiple threads and produces the time taken to complete these calculations as output.The source code of \texttt{mpbenchmark} provided a solution in \texttt{C\#}, this served as a useful reference of how would be implemented in code using object-oriented design. Subsequently, the \texttt{C++} object oriented design comprised of three main classes:
 
 \begin{enumerate}
 	\item \texttt{FileDataLoader}: the primary function of this class is to load data from the input file and also to allow the user to save output data to the output file.
@@ -24,22 +7,18 @@ The source code of \texttt{mpbenchmark} provided a solution in \texttt{C\#}, thi
 	\item \texttt{Worker}: this class contains functions to perform the important calculations, computations of deadlines missed and output data. This class defines the \texttt{operator ()} which encapsulates the main calculations, this class design is know as a \texttt{Functor}.
 \end{enumerate}
 
-The \texttt{C++} object-oriented class design can be visualised using a UML class diagram shown in figure \ref*{fig:mpbenchmark_UML_diagram}.
+The \texttt{C++} object-oriented class design can be visualised using a UML class diagram shown in figure \ref{fig:mpbenchmark_UML_diagram}.
 
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+\begin{figure}[H] % Positioning preference: here, top, bottom, page
 	\centering
-	\includegraphics[width=1\textwidth, height=60cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_class.png} % Adjust the path and width as needed
+	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_class.png} % Adjust the path and width as needed
 	\caption{UML class diagram of the proposed \texttt{C++} solution.}
 	\label{fig:mpbenchmark_UML_diagram} % Use this label to reference the figure
 \end{figure}
 
-The \texttt{mpbenchmark} implementation in the \texttt{C} language utilized the \texttt{printf} function for output throughout the application. Transitioning this functionality to \texttt{C++} posed a challenge, as \texttt{printf} relies on ``format string based" formatting, whereas \texttt{C++} typically uses ``stream-based" formatting through \texttt{std::cout}. This discrepancy was addressed in the \texttt{C++20} standard with the introduction of \texttt{std::format}. However, oddly enough, \texttt{std::format} was not supported by the \texttt{gcc} compiler version on the target system, despite it supporting the \texttt{C++20} standard\cite{std_format_gcc_compiler_version}. A workaround involved using the \texttt{fmt::print} function from the \texttt{fmt} library, which is noted as the inspiration behind \texttt{std::format}\cite{fmt_printing_library}. Detailed system specifications and a code snippet demonstrating the use of \texttt{fmt::print} are provided in the appendix.
+The proposed solution employed the \texttt{fmt} library in \texttt{C++}\cite{fmt_printing_library} for output, providing an enhanced printing method compared to \texttt{std::cout}. Although the compiler on the target system supported the \texttt{C++20} standard, it lacked support for the \texttt{std::format} function, which further enhances printing capabilities in \texttt{C++}\cite{std_format_gcc_compiler_version}. Additionally, a new command line argument was introduced to adjust the number of threads used, complementing the existing argument that modifies the simulation engine. For compilation and linking, the industry-standard \texttt{CMake}\cite{cmake_about} software was utilized. In the \texttt{CMakeLists.txt} file, essential configurations included specifying the \texttt{C++20} standard, incorporating the \texttt{fmt} library, and compiling with the \texttt{-O2} optimization flag. This optimization flag, also used by the original authors of \texttt{mpbenchmark}\cite{mpbenchmark_paper}, was retained in the proposed solution for consistency.
 
-The original \texttt{mpbenchmark} code included a command line argument allowing the user (or developer) to specify the engine type for computations. The application supports three distinct engine types. Importantly, the number of threads the application employs can be modified using the \texttt{taskset} command in \texttt{Linux}, which determines the CPU cores the application can run on. To improve this functionality, a second command line argument was added in the proposed solution. This new parameter enables users to set the number of threads the application should use. If this argument is omitted, the application automatically defaults to the maximum number of threads available on the system. This enhancement is detailed in a code snippet in the appendix.
-
-To compile and link the application, the industry standard \texttt{CMake}\cite{cmake_about} software was used. In the \texttt{CMakeLists.txt}(the file used for building the project), the key aspects were specifying the \texttt{C++20} standard, including the \texttt{fmt} library and compilation with the \texttt{-O2} flag. This optimisation flag was also used by the authors of \texttt{mpbenchmark}\cite{mpbenchmark_paper} therefore it was used in the proposed solution for consistency. 
-
-To further enhance the performance of the \texttt{mpbenchmark}, the \texttt{Valgrind/Callgrind} function profiler tool was deployed to find potential bottlenecks. \texttt{Callgrind} profiling results showed that part of the application where it approximates the value of $\pi$ had the highest self-cost. This code snippet is shown in the listing ~\ref{lst:pi_approximation_1} below:
+An alternate solution was developed to further enhance the performance of \texttt{mpbenchmark}, the \texttt{Valgrind/Callgrind} function profiler tool was deployed to find potential bottlenecks. The application was compiled with debug information and optimisations turned off, this was done by specifying the build type as \texttt{Debug} and compiling with \texttt{-g} and \texttt{-O0} flags in the \texttt{CMake} file. \texttt{Callgrind} profiling results showed that part of the application where it approximates the value of $\pi$ had the highest self-cost. This code snippet is shown in the listing ~\ref{lst:pi_approximation_1} below:
 
 \begin{lstlisting}[
 	caption={Part of the code with the highest self-cost. It approximates $\pi$ using numerical integration.},
@@ -58,9 +37,9 @@ for (int i = 0; i < num_steps; i++) {
 pi = sum * step;
 \end{lstlisting}
 
-The problem with this part of the code is that it already part of the parallel regions where it is executed by each thread. It may seen like a good candidate for applying parallel \texttt{for loop} from the OpenMP library however creating nested threads beyond the number of threads available on the system does not always lead to higher performance and in many cases can degrade performance. Another way to improve performance is by using SIMD intrinsics, this a programming tool to improve single-threaded or sequential performance of a code it stands for ``Single Instruction Multiple Data". By using these intrinsics, programmers can write code that processes data in parallel directly within a single CPU cycle. An advantage of using \texttt{C++}(and/or \texttt{C}) is that SIMD intrinsics can be deployed whereas higher level languages like \texttt{Java} or \texttt{C\#} make it very difficult to access these. 
+The problem with this part of the code is that it already part of the parallel regions where it is executed by each thread. It may seen like a good candidate for applying parallel \texttt{for loop} from the OpenMP library however creating nested threads beyond the number of threads available on the system does not always lead to higher performance and in many cases can degrade performance. Another way to improve performance is by using SIMD intrinsics. An advantage of using \texttt{C++}(and/or \texttt{C}) is that SIMD intrinsics can be deployed whereas higher level languages like \texttt{Java} or \texttt{C\#} make it very difficult to access these. 
 
-SIMD intrinsics vary by the target CPU, \texttt{x86} processors (which are found in most laptop and desktops) use \texttt{AVX2} instructions whereas \texttt{ARM} processors(commonly found in Apple products and embedded devices) use \texttt{NEON} instructions. In this project we need to use both as our proposed \texttt{C++} solution will be deployed on both desktop(\texttt{x86} processor) and Raspberry Pi devices(\texttt{ARM} based processor). The SIMD enhanced code can be summarised algorithmatically in the following steps and shown as a code snippet in listing ~\ref{lst:pi_approximation_2}: 
+SIMD intrinsics vary by the target CPU, \texttt{x86} processors (which are found in most laptop and desktops) use \texttt{AVX2} instructions whereas \texttt{ARM} processors(commonly found in Apple products and embedded devices) use \texttt{NEON} instructions. In this project we use both as our proposed \texttt{C++} solution will be deployed on both desktop(\texttt{x86} processor) and Raspberry Pi devices(\texttt{ARM} based processor). The SIMD enhanced code can be summarised algorithmatically in the following steps and shown as a code snippet in listing ~\ref{lst:pi_approximation_2}: 
 
 \begin{enumerate}
 	\item Initialise \texttt{256-bit} wide vectors: each vector can hold four double-precision (\texttt{64-bit}) floating point numbers. The main initialisations would be a vector to hold four loop indices (\texttt{vec\_i}), a vector to calculate four values of $x$ (\texttt{vec\_x}), a vector to hold the result of the integrand (\texttt{vec\_temp}) and a vector to accumulate the sum (\texttt{vec\_sum}) after each loop iteration.
@@ -143,9 +122,9 @@ done
 
 The process of collecting benchmark times can be visualised in the image shown in figure ~\ref{fig:results_collection}. The python application used to plot the graphs was trivial and not shared in this report. 
 
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+\begin{figure}[H] % Positioning preference: here, top, bottom, page
 	\centering
-	\includegraphics[width=1\textwidth, height=15cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/benchmarking_method.png} % Adjust the path and width as needed
+	\includegraphics[width=1\textwidth, height=5cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/benchmarking_method.png} % Adjust the path and width as needed
 	\caption{Benchmark results collection strategy.}
 	\label{fig:results_collection} % Use this label to reference the figure
 \end{figure}
@@ -172,7 +151,7 @@ To address the different compilations, the \texttt{CMake} file was altered. A ma
 	]
 void ConvLayer::forward(float *pfInput)
 {
-
+// collapse 3 "for" loops and use dynamic scheduling 
 #pragma omp parallel for collapse(3) schedule(dynamic)
 for (int g = 0; g < m_nGroup; g++)
 {
@@ -213,11 +192,11 @@ ConvLayer::ConvLayer(/*Constructor arguments not shown ... */)
 // Creating arrays which are 32-byte aligned for SIMD optimisations 
 size_t alignment = 32;
 size_t inputPadSize = m_nInputNum * m_nInputPadWidth * m_nInputPadWidth * sizeof(float);
-size_t weightSize = m_nOutputNum * m_nInputGroupNum * m_nKernelSize * sizeof(float);
-size_t outputSize = m_nOutputNum * m_nOutputSize * sizeof(float);
+size_t weightSize   = m_nOutputNum * m_nInputGroupNum * m_nKernelSize * sizeof(float);
+size_t outputSize   = m_nOutputNum * m_nOutputSize * sizeof(float);
 
 m_pfInputPad = static_cast<float*>(aligned_alloc(alignment, inputPadSize));
-m_pfWeight = static_cast<float*>(aligned_alloc(alignment, weightSize));
+m_pfWeight   = static_cast<float*>(aligned_alloc(alignment, weightSize));
 }
 \end{lstlisting}
 

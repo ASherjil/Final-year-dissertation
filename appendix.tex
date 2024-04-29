@@ -6,13 +6,15 @@ The following setup was used to collect results and benchmarking data:
 	\centering
 	\begin{tabular}{@{}lccc@{}}
 		\toprule
-		\textbf{Specification} & \textbf{Desktop} & \textbf{RPI5} & \textbf{RPI4} \\ 
+		\textbf{Specification} & \textbf{Desktop} & \textbf{RPI5} & \textbf{RPI4 Model B} \\ 
 		\midrule
 		Processor             & AMD Ryzen 7 5800H & Cortex A-76 & Cortex A-72 \\
-		Processor Type        & x86               & ARM         & ARM \\
-		Cores/Threads         & 8/16              & 4/4         & 4/4 \\
-		RAM Size              & 16GB              & 8GB         & 4GB \\
-		RAM Type/Speed        & DDR4 / 3200 MT/s  & LPDDR4/ 4267 MT/s & LPDDR4 / 3200 MT/s \\
+		Processor Type          & x86                 & ARM          & ARM \\
+		Processor Speed        & 3.2 - 4.4 GHz & 2.4 GHz     & 1.5 GHz\\
+		Cores/Threads         & 8/16              & 4/4             & 4/4 \\
+		RAM Size              & 16GB              & 8GB           & 4GB \\
+		RAM Type          & DDR4          & LPDDR4    & LPDDR4 \\
+		RAM Speed        & 3200 MT/s  & 4267 MT/s &3200 MT/s \\
 		Operating System      & Ubuntu Linux 22.04.4 LTS & Debian GNU/Linux 12 (bookworm) &  \\
 		GCC Compiler          & 11.4.0            & 12.2.0      &  \\
 		GNAT Compiler         & 10.5.0            & 12.2.0      &  \\
@@ -323,6 +325,7 @@ Results collected from Raspberry Pi 4 can be seen in figures ~\ref{fig:mobilenet
 \end{figure}
 
 \section{Objective 3: \texttt{DeBaTE-FI} platform}
+\label{sec:app_obj3}
 
 The application was profiled using \texttt{py-spy} tool. The application spawned multiple processes, therefore they were profiled separately. Profiling results from the process responsible for the GUI of the application are shown in figure ~\ref{fig:debate_profile_1} and the profiling results from the process responsible for communicating with the MCUs are shown in figure ~\ref{fig:debate_profile_2}.
 
@@ -341,10 +344,236 @@ The application was profiled using \texttt{py-spy} tool. The application spawned
 \end{figure}
 
 
-%\includepdf[
-%pages=-,
-%addtotoc={1, section, 1, DeBaTE-FI platform publication(maybe remove?), appendix:debate_fi},
-%pagecommand={\label{appendix:debate_fi}}
-%]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/files/Debate_FI_platform.pdf}
+The \texttt{C++} wrapper was created by emulating the \texttt{Python's} \texttt{telnetlib} library.Using the code in listing ~\ref{lst:open_ocd_class} the following functions require emulation:
+
+\begin{enumerate}
+	\item \texttt{read\_some()}
+	\item \texttt{write()}
+	\item \texttt{Exec()}
+	\item \texttt{Readout()}
+\end{enumerate}
+
+
+\begin{lstlisting}[
+	caption={Functions used from \texttt{Python's} \texttt{telnetlib} library.},
+	label={lst:open_ocd_class}
+	]
+	
+import telnetlib
+
+class OpenOCD:
+	def __init__(self, Host="localhost", Port=4444):
+		try:
+			self.tn = telnetlib.Telnet(Host, Port)
+		except ConnectionRefusedError as e:
+			print("ERROR: Could not open port",Port)
+			raise e
+		self.Readout()
+
+#
+# Communication functions
+#
+	def Readout(self):
+		s = ''
+		Lines = []
+		while True:
+			s += self.tn.read_some().decode('UTF-8') # 'telnetlib' function called
+			l = s.splitlines()
+		if len(l) > 1:
+			for s in l[:-1]:
+				if len(s) > 0:
+					Lines.append(s)
+			s = l[-1]
+	if s == '> ':
+		return Lines
+
+	def Exec(self, Cmd, *args):
+		Text = Cmd
+		for arg in args:
+			if arg:
+				Text += ' ' + arg
+		Text += '\n'
+		self.tn.write(bytearray(Text, 'UTF-8')) # 'telnetlib' function called
+		return self.Readout()
+\end{lstlisting}
+
+Using the open-source \texttt{telnet} libraries in \texttt{C++}: \texttt{telnetpp}\cite{telnetpp_library} and \texttt{serverpp}\cite{serverpp_library} the necessary functions were created in the wrapper class seen in figure ~\ref{fig:telnetlibcpp_UML}. Listing ~\ref{lst:c++_telnetlibcpp} shows the code:
+
+\begin{lstlisting}[
+	caption={\texttt{C++} wrapper class to integrate with the \texttt{Python} application. Emulating functions \texttt{read\_some()}, \texttt{write()}, \texttt{Exec()} and \texttt{Readout()}. },
+	label={lst:c++_telnetlibcpp}
+	]
+std::vector<serverpp::byte> TelnetlibCpp::read_some() {
+	incoming_data_ = false; // Ensure the flag is reset before starting the async operation
+	receivedData_.clear(); // Clear previous data
+	// Return a copy of the data or move receivedData as appropriate
+	telnet_session_.async_read([this](gsl::span<const serverpp::byte> data) {
+		if (!data.empty()) {
+			// Directly assign the data since receivedData is a member variable
+			receivedData_.assign(data.begin(), data.end());
+		}
+		incoming_data_ = true; // Indicate that data has been received or the operation is complete
+	});
+	// Efficiently wait for the async operation to complete using io_context.run_one()
+	while (!incoming_data_) {
+		io_context_.run_one();
+	}
+	// Return a copy of the data or move receivedData as appropriate
+	return receivedData_;
+}
+
+void TelnetlibCpp::write(const std::vector<serverpp::byte>& data) {
+	// Assuming 'serverpp::byte' is compatible with 'telnetpp::byte'
+	// Wrap the data in a 'telnetpp::bytes' variant to create a 'telnetpp::element'
+	telnetpp::bytes byte_data(data.data(), data.size());
+	telnetpp::element elem = byte_data;  // Implicitly converts to variant
+	
+	// Now call the write method with the constructed element
+	telnet_session_.write(elem);
+}
+
+std::vector<std::string> TelnetlibCpp::Exec(const std::string& cmd, const std::vector<std::string>& args) {
+	std::string text = cmd;
+	for (const auto& arg : args) {
+		if (!arg.empty()) {
+			text += ' ' + arg;
+		}
+	}
+	text += '\n';
+	
+	// write(Cmd), write directly to avoid unnecessary conversions 
+	telnetpp::bytes byte_data(reinterpret_cast<const std::uint8_t*>(text.data()), text.size());
+	telnetpp::element elem = byte_data;
+	telnet_session_.write(elem); 
+	//-----------------------------------------------------------------------------------------
+	
+	// Read and return the output
+	return Readout();
+}
+
+std::vector<std::string> TelnetlibCpp::Readout() {
+	std::string s;
+	std::vector<std::string> lines;
+	
+	while (true) {
+		std::vector<std::uint8_t> byte_data = read_some();
+		std::string chunk(byte_data.begin(), byte_data.end());
+		
+		s += chunk;
+		
+		size_t start_pos = 0;
+		size_t pos;
+		while ((pos = s.find('\n', start_pos)) != std::string::npos) {
+			if (pos > start_pos) { // Ignore empty lines
+				std::string line(s.begin() + start_pos, s.begin() + pos);
+				line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
+				line.erase(std::remove(line.begin(), line.end(), '\x00'), line.end());
+				
+				if (line.size())
+				lines.push_back(std::move(line)); // Use move semantics to avoid copying
+			}
+			start_pos = pos + 1;
+		}
+		s.erase(s.begin(), s.begin() + start_pos); // Only erase the processed part
+		
+		if (s.find('>') != std::string::npos) {
+			return lines; // Assuming lines are already filtered correctly
+		}
+	}
+}
+
+\end{lstlisting}
+
+This was integrated into the \texttt{Python} application using a tool called \texttt{pybind11}. This required creating a \texttt{.cpp} file to allow the \texttt{C++} funtions to be called from the \texttt{Python} file, this is seen in listing ~\ref{lst:pybind_c++_file}.
+
+\begin{lstlisting}[
+	caption={Preparing our \texttt{C++} class \texttt{telnetlibcpp} using \texttt{pybind11} to be used with \texttt{Python}.},
+	label={lst:pybind_c++_file}
+	]
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h> // For automatic conversion of std::vector
+#include "telnetlibcpp.hpp" // Include your class definition
+
+namespace py = pybind11;
+
+PYBIND11_MODULE(telnetlibcpp, m) {
+	py::class_<TelnetlibCpp>(m, "TelnetlibCpp")
+	.def(py::init<const std::string&, serverpp::port_identifier>())
+	.def("Readout", &TelnetlibCpp::Readout) // Bind the Readout function
+	// Bind the Exec function, using a lambda to handle optional vector<string> args
+	.def("Exec", [](TelnetlibCpp& self, const std::string& cmd, const py::list& args) {
+		std::vector<std::string> vecArgs;
+		for (const auto& arg : args) {
+			if (!arg.is_none()) {
+				vecArgs.push_back(arg.cast<std::string>());
+			} else {
+				// Optionally, handle None values differently, e.g., by inserting an empty string
+				// vecArgs.push_back("");
+			}
+		}
+		return self.Exec(cmd, vecArgs);
+	})
+	.def("read_some", &TelnetlibCpp::read_some)
+	.def("write", &TelnetlibCpp::write)
+	.def("write_raw_sequence", &TelnetlibCpp::write_raw_sequence)
+	.def("run", &TelnetlibCpp::run);
+}
+\end{lstlisting}
+
+The final step was to compile the \texttt{C++} codes into a shared library(\texttt{.so}) file which was then placed in the directory of the \texttt{Python} application where it needed to be used. Listing ~\ref{lst:cmake_so_file} shows hows this shared library file was created. 
+
+\begin{lstlisting}[
+	caption={\texttt{CMake} file to produce a shared library(\texttt{.so}) file of our \texttt{C++} class.},
+	label={lst:cmake_so_file}
+	]
+cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
+project(telnetlibcpp)
+
+# Set the C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Optimization flag -O3 for Release builds
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+# Include Pybind11
+include(FetchContent)
+FetchContent_Declare(
+pybind11
+GIT_REPOSITORY https://github.com/pybind/pybind11.git
+GIT_TAG v2.6.1
+)
+FetchContent_MakeAvailable(pybind11)
+
+# Find required Boost components in one call
+find_package(Boost REQUIRED COMPONENTS container locale)
+find_package(serverpp REQUIRED)
+find_package(telnetpp 3.0.0 REQUIRED)
+find_package(gsl-lite REQUIRED)
+
+# Source files including the Pybind11 binding file
+set(SOURCE_FILES
+src/telnetlibcpp.cpp
+src/pybind_module.cpp  # Your Pybind11 binding source file
+)
+
+# Compile as a shared library
+add_library(telnetlibcpp SHARED ${SOURCE_FILES})
+
+target_include_directories(telnetlibcpp PRIVATE include)
+
+target_link_libraries(telnetlibcpp
+PRIVATE
+KazDragon::serverpp
+KazDragon::telnetpp
+Boost::container
+Boost::locale
+pybind11::module  # Link against Pybind11 module support
+)
+
+# Set output library name and ensure it doesn't have the 'lib' prefix
+set_target_properties(telnetlibcpp PROPERTIES PREFIX "" OUTPUT_NAME "telnetlibcpp")
+\end{lstlisting}
 
 

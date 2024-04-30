@@ -47,6 +47,7 @@
 	morecomment=[l][\color{magenta}]{\#}
 }
 
+\renewcommand{\bibname}{References}
 
 \usepackage{fontspec}
 \setmainfont{Carlito}
@@ -70,24 +71,26 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
-  \IfFileExists{parskip.sty}{%
-    \usepackage{parskip}
-  }{% else
-    \setlength{\parindent}{0pt}
-    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+	\IfFileExists{parskip.sty}{%
+		\usepackage{parskip}
+	}{% else
+		\setlength{\parindent}{0pt}
+		\setlength{\parskip}{6pt plus 2pt minus 1pt}}
 }{% if KOMA class
-  \KOMAoptions{parskip=half}}
+	\KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
+	hidelinks,
+	pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{longtable,booktabs}
+
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
 \makeatletter
@@ -131,10 +134,9 @@
 	\renewcommand{\footrulewidth}{0pt}
 }
 
-\renewcommand{\bibname}{References}
+
 
 \usepackage{titlesec}
-\usepackage{hyperref} % This should generally be the last package you load
 
 % Formatting the chapter title to remove "Chapter X"
 \titleformat{\chapter}[display]
@@ -206,17 +208,18 @@ The structure of the report is organized as follows: it starts with a literature
 \input{conclusion.tex}
 
 % Ensure bibliography starts on a new page and add it to the ToC.
+\clearpage % Ensures bibliography starts on a new page.
+\phantomsection % Ensures that the hyperlink anchor is correctly placed here.
 \addcontentsline{toc}{chapter}{References}
 \bibliographystyle{IEEEtran}
 \bibliography{references} % Assumes your bibliography is in the 'references.bib' file.
 
 % Ensure appendices start on a new page and add it to the ToC.
 \newpage
-\addcontentsline{toc}{chapter}{Appendices(Not completed)}
+\chapter{Appendices(Not completed)}
 \begin{appendices}
 	\input{appendix.tex}  % Assuming this file contains your appendices.
 \end{appendices}
-
 
 
 \end{document}

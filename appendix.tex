@@ -155,6 +155,40 @@ Results collected from Raspberry Pi 4 can be seen in figures ~\ref{fig:mpbenchma
 	\label{fig:mpbenchmark_rpi4_speedup_plot} % Use this label to reference the figure
 \end{figure}
 
+% Making the table fit in the page by scaling it down
+\begin{table}[h!]
+	\centering
+	\resizebox{\textwidth}{!}{% Resizes the table to fit within the text width
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\textbf{Cores} & \textbf{C} & \textbf{C++} & \textbf{C++(NEON single)} & \textbf{C++(NEON double)} & \textbf{Java} & \textbf{JavaForkJoin} & \textbf{C\#} & \textbf{Ada} \\ \hline
+			1              & 0           &0              & 0                          & 0                          &0              &0                      &0              &0             \\ \hline
+			2              & 0          & 0             &  0                         &  0                         & 0.18             &0                      &0              &0             \\ \hline
+			4              & 0           & 0             & 0                          & 0                          &1.33              &0                      & 0             &0             \\ \hline
+			8              & 0           & 0            &  0                         &   0                        & 8.21             & 1.03                     &0              &0             \\ \hline
+		\end{tabular}
+	}
+	\caption{Mean deadlines missed, results collected from the Raspberry Pi 5.}
+	\label{tab:mpbenchmark_rpi5} % Label for referencing
+\end{table}
+
+% Making the table fit in the page by scaling it down
+\begin{table}[h!]
+	\centering
+	\resizebox{\textwidth}{!}{% Resizes the table to fit within the text width
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\textbf{Cores} & \textbf{C} & \textbf{C++} & \textbf{C++(NEON single)} & \textbf{C++(NEON double)} & \textbf{Java} & \textbf{JavaForkJoin} & \textbf{C\#} & \textbf{Ada} \\ \hline
+			1              & 0           &0              &  0                          & 0                         &0.90              &0                      &0             &0             \\ \hline
+			2              & 0          & 0              &  0                         &  0                         &1.00              &0.27                 &0             &0             \\ \hline
+			4              & 0.005   & 0              &  0                         & 0.005                   &1.34              &0.52                 &0             &0.01             \\ \hline
+			8              & 0.03      & 0.0295    &  0                         &  0.04                    &6.35             & 6.93                 &2.33        &0.04             \\ \hline
+		\end{tabular}
+	}
+	\caption{Mean deadlines missed, results collected from the Raspberry Pi 4.}
+	\label{tab:mpbenchmark_rpi4} % Label for referencing
+\end{table}
+
 \section{Objective 2: \texttt{MobileNet}}
 
 The \texttt{MobileNet} repository\cite{mobilenet_repo} contained some outdated portions of the code which were updated, certain parts of the code contained Chinese language which were translated into English and \texttt{CMake} build software was used to setup the \texttt{MobileNet} application. 

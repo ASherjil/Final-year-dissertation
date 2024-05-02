@@ -1,21 +1,14 @@
 \section{Objective 1: \texttt{mpbenchmark}}
 
-Results from the proposed solution collected from desktop(\texttt{x86} processor) are shown below, they are presented in the legend ``C++" and ``C++(SIMD Optimised)". A benchmark plot along with a speedup plot are shown in figures ~\ref{fig:mpbenchmark_desktop_plot} and ~\ref{fig:mpbenchmark_desktop_speedup_plot} respectively. 
+Figure ~\ref{fig:mpbenchmark_desktop_plot} displays the results collect from desktop (\texttt{x86}) processor. The legend entries ``C++" and ``C++(SIMD Optimised)" represent the proposed solution with SIMD referring to \texttt{AVX2} instructions being used. 
 
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
-	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_desktop.png} % Adjust the path and width as needed
-	\caption{Mean benchmark plot of \texttt{mpbenchmark} collected from \texttt{x86} processor in seconds. The error bars represent 95\% confidence interval. (Lower is better).}
+	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_desktop_results.png} % Adjust the path and width as needed
+	\caption{Mean benchmark plot in seconds shown top(lower is better). Speedup plot shown bottom(higher is better).}
 	\label{fig:mpbenchmark_desktop_plot} % Use this label to reference the figure
 \end{figure}
 
-
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_desktop_speedup.png} % Adjust the path and width as needed
-	\caption{Speedup plot collected from \texttt{x86} processor. The vertical black line shows the maximum physical cores of the processor. (Higher is better).}
-	\label{fig:mpbenchmark_desktop_speedup_plot} % Use this label to reference the figure
-\end{figure}
 
 On desktop(\texttt{x86}) processor, \texttt{AVX2} instructions were used to implement SIMD intrinsics therefore we compare the decimal precision with the original unoptimised SIMD code, see table ~\ref{tab:c++_avx2_pi}.
 
@@ -23,7 +16,7 @@ On desktop(\texttt{x86}) processor, \texttt{AVX2} instructions were used to impl
 	\centering
 	\begin{tabular}{|c|c|c|}
 		\hline
-		\textbf{Programming language/configuration} & \textbf{Decimal value of $\pi$} & \textbf{Mean run time using maximum threads(s)} \\ \hline
+		\textbf{Programming language/configuration} & \textbf{Decimal value of $\pi$} & \textbf{Mean run time(s)} \\ \hline
 		\texttt{C++}             & 3.1415926535897643 &  0.007659 \\ \hline
 		\texttt{C++/AVX2}   & 3.1415926535899033 &  0.002173  \\ \hline
 		\texttt{C}                 & 3.1415926535897643 & 0.011577 \\ \hline
@@ -38,24 +31,24 @@ On desktop(\texttt{x86}) processor, \texttt{AVX2} instructions were used to impl
 % Talk about SMT's benefits if any
 % Discuss AVX2's decimal precision
 
-The proposed \texttt{C++} solution outperformed the original implementations in \texttt{C} and \texttt{Ada} by over 11\%, marking a significant reduction in runtime. Additionally, it achieved a higher speed-up compared to the \texttt{Ada} solution, as illustrated in figure~\ref{fig:mpbenchmark_desktop_speedup_plot}. The SIMD-enhanced solution achieved a remarkable runtime reduction of over 70\%, significantly outperforming all other solutions. However, this version did not show as large a speedup when run with an increased number of threads, which is not surprising given the already low runtime with a single thread. Moreover, the \texttt{AVX2}-enhanced code demonstrated decimal precision up to 12 decimal places, with discrepancies appearing from the 13th decimal place onwards, as shown in table~\ref{tab:c++_avx2_pi}. This suggests a slight consideration that using \texttt{AVX2} instructions might lead to reduced precision for calculations requiring high decimal accuracy. However, the reduction in decimal precision has been minor, and its effects on the application have been largely inconsequential. Given the dramatic improvement in performance with \texttt{AVX2} instructions, the minor loss of decimal precision seems negligible compared to the benefits. Both solutions have met their objectives, with the first achieving superior speed-up and the second providing insights into CPU performance when SIMD intrinsics are utilized.
+The proposed \texttt{C++} solution outperformed the original implementations in \texttt{C} and \texttt{Ada} by over 11\%, marking a significant reduction in runtime. Additionally, it achieved a higher speed-up compared to the \texttt{Ada} solution, as illustrated in Figure~\ref{fig:mpbenchmark_desktop_plot}. The SIMD-enhanced solution achieved a remarkable runtime reduction of over 70\%, significantly outperforming all other solutions. However, this version did not show as large a speedup when run with an increased number of threads, which is not surprising given the already low runtime with a single thread. Moreover, the \texttt{AVX2}-enhanced code demonstrated decimal precision up to 12 decimal places, with discrepancies appearing from the 13th decimal place onwards, as shown in table~\ref{tab:c++_avx2_pi}. This suggests a slight consideration that using \texttt{AVX2} instructions might lead to reduced precision for calculations requiring high decimal accuracy. However, the reduction in decimal precision has been minor, and its effects on the application have been largely inconsequential. Given the dramatic improvement in performance with \texttt{AVX2} instructions, the minor loss of decimal precision seems negligible compared to the benefits. Both solutions have met their objectives, with the first achieving superior speed-up and the second providing insights into CPU performance when SIMD intrinsics are utilized.
 
 Another noteworthy observation is the lack of performance gain when scaling from 8 to 16 cores. The processor used supports simultaneous multi-threading (SMT), commonly branded as ``Hyper-threading" for Intel CPUs, which is typical in modern \texttt{x86} processors. SMT theoretically allows each physical core to execute two threads, and an 8-core processor with SMT would appear to have 16 cores. However, the proposed solutions, along with other compiled languages like \texttt{C} and \texttt{Ada}, showed negligible performance gains by utilizing the virtual cores. \texttt{Java} experienced a slight performance degradation, while \texttt{C\#} was the only language to demonstrate a performance increase. Using the results from the \texttt{x86} processor, we can conclude that the additional cores provided by SMT did not enhance performance and, in some cases, even degraded it.
 
-Results obtained from the latest Raspberry Pi 5 (\texttt{Cortex A-76} processor) are shown in figures ~\ref{fig:mpbenchmark_rpi5_plot} and ~\ref{fig:mpbenchmark_rpi5_speedup_plot}. The results obtained from the Raspberry Pi 4(\texttt{Cortex A-72} processor) can be found in appendix (figures ~\ref{fig:mpbenchmark_rpi4_plot} and ~\ref{fig:mpbenchmark_rpi4_speedup_plot}).
+Results obtained from the latest Raspberry Pi 5 (\texttt{Cortex A-76} processor) are shown in figures ~\ref{fig:mpbenchmark_rpi5_plot}. The results obtained from the Raspberry Pi 4(\texttt{Cortex A-72} processor) can be found in [Appendix Figure ~\ref{fig:mpbenchmark_rpi4_plot}].
 
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
-	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi5.png} % Adjust the path and width as needed
+	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi5_results2.png} % Adjust the path and width as needed
 	\caption{Mean benchmark plot of results collected from Raspberry Pi 5(in seconds). The error bars represent 95\% confidence interval. (Lower is better).}
 	\label{fig:mpbenchmark_rpi5_plot} % Use this label to reference the figure
 \end{figure}
 
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
-	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi5_speedup.png} % Adjust the path and width as needed
-	\caption{Speedup plot collected from Raspberry Pi 5 processor. The vertical black line shows the maximum physical cores of the processor. (Higher is better).}
-	\label{fig:mpbenchmark_rpi5_speedup_plot} % Use this label to reference the figure
+	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi4_results2.png} % Adjust the path and width as needed
+	\caption{Mean benchmark plot of results collected from Raspberry Pi 4(in seconds). The error bars represent 95\% confidence interval. (Lower is better).}
+	\label{fig:mpbenchmark_rpi4_plot} % Use this label to reference the figure
 \end{figure}
 
 The decimal precision of using single and double precision floating point \texttt{NEON} instructions on the Raspberry Pi processors is compared in table ~\ref{tab:c++_neon_pi}.
@@ -89,20 +82,13 @@ Benchmarks allow us to compare the latest Raspberry Pi 5 (\texttt{Cortex A-76}) 
 The proposed \texttt{C++} solution surpassed the previously developed \texttt{mpbenchmark}\cite{mpbenchmark_paper} on both \texttt{x86} and \texttt{ARM} processors. It offered better speedup across threads, and an alternate novel \texttt{SIMD} enhanced version (where the application decides whether to use \texttt{AVX2} or \texttt{NEON} depending on the processor type) can be utilised to analyse the CPUs' SIMD performance and scalability. This unprecedented improvement is part of an upcoming publication.
 
 \section{Objective 2: \texttt{MobileNet}}
-After parallelising \texttt{MobileNet} the results collected from desktop(\texttt{x86} processor) were compared with SIMD optimisations and without them. The benchmark and speedup plot are shown in figures ~\ref{fig:mobilenet_desktop_plot} and ~\ref{fig:mobilenet_desktop_speedup}. 
+After parallelising \texttt{MobileNet} the results collected from desktop(\texttt{x86} processor) were compared with SIMD optimisations and without them. The benchmark and speedup plot are shown in figures ~\ref{fig:mobilenet_desktop_plot}.
 
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
 	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_desktop.png} % Adjust the path and width as needed
 	\caption{Mean benchmark plot of results collected from \texttt{x86} processor(in milliseconds). (Lower is better).}
 	\label{fig:mobilenet_desktop_plot} % Use this label to reference the figure
-\end{figure}
-
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_desktop_speedup.png} % Adjust the path and width as needed
-	\caption{Speedup plot comparing the two solutions with results collected from \texttt{x86} processor. (Higher is better).}
-	\label{fig:mobilenet_desktop_speedup} % Use this label to reference the figure
 \end{figure}
 
 The mean benchmark time of the original \texttt{MobileNet} application\cite{mobilenet_repo} was 1474.2 ms(using the \texttt{-O3} optimisation flag). The benchmark time using the maximum threads(16) with SIMD was 188.24ms and without SIMD it was 294.68ms. The SIMD optimisations are turned on and off as shown in listing  ~\ref{lst:mobilenet_parallel}. This presents a drastic reduction in run time of 87.2\% and 80.0\% for the SIMD and non-SIMD solutions respectively. Using multi-threading on the desktop processor yielded exceptional results and a dramatic improvement of the application. The results also indicate a performance degradation when using threads greater than 8 which is the maximum physical cores on the system. Both of the solutions produced a slight degradation of performance when going from 8 to 16 threads, suggesting once again the virtual cores from SMT did not yield in performance gains. 
@@ -116,7 +102,7 @@ The performance on the Raspberry Pi devices was a little more nuanced. The resul
 	\item \texttt{2\_Parallel\_Regions}: only two functions \texttt{ConvLayer::forward} and \texttt{BatchNormalLayer::forward} have been parallelised without SIMD optimisations.
 \end{enumerate}
 
-The results for Raspberry Pi 5 are shown in figures ~\ref{fig:mobilenet_rpi5_plot} and ~\ref{fig:mobilenet_rpi5_speedup}. The results for Raspberry Pi 4 can be found in appendix (figures ~\ref{fig:mobilenet_rpi4_plot} and ~\ref{fig:mobilenet_rpi4_speedup}). 
+The results for Raspberry Pi 5 are shown in Figures ~\ref{fig:mobilenet_rpi5_plot}. The results for Raspberry Pi 4 can be found in [Appendix Figure ~\ref{fig:mobilenet_rpi4_plot}].
 
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
@@ -127,11 +113,10 @@ The results for Raspberry Pi 5 are shown in figures ~\ref{fig:mobilenet_rpi5_plo
 
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
-	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_rpi5_speedup.png} % Adjust the path and width as needed
-	\caption{Speedup plot comparing different solutions with results collected from \texttt{Cortex A-76} processor. (Higher is better).}
-	\label{fig:mobilenet_rpi5_speedup} % Use this label to reference the figure
+	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_rpi4.png} % Adjust the path and width as needed
+	\caption{Mean benchmark plot of results collected from \texttt{Cortex A-72} processor(in milliseconds). (Lower is better).}
+	\label{fig:mobilenet_rpi4_plot} % Use this label to reference the figure
 \end{figure}
-
 
 \begin{table}[htbp]
 	\centering
@@ -176,16 +161,9 @@ Results collected from the local setup using four \texttt{STM32F767ZI} boards ar
 
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/debate_fi.png} % Adjust the path and width as needed
+	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/debate_fi.png} % Adjust the path and width as needed
 	\caption{Benchmark plot comparing different solutions with runtime in minutes. (Lower is better).}
 	\label{fig:debate_fi_plot} % Use this label to reference the figure
-\end{figure}
-
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/debate_fi_speedup.png} % Adjust the path and width as needed
-	\caption{Speedup plot comparing the different solutions. (Higher is better).}
-	\label{fig:debate_fi_speedup} % Use this label to reference the figure
 \end{figure}
 
 The \texttt{Python\_Unoptimised\_C++\_library} solution achieved a 55\% reduction in runtime, reducing it to 1.45 minutes from 3.17 minutes. However, it resulted in a lower speedup compared to the original, likely due to the limited runtime achieved using only one board. Conversely, the \texttt{Python\_Optimised} solution delivered the most substantial reduction in runtime of 62\% (1.20 minutes compared to 3.17 minutes). Despite this, it also exhibited a lower speedup, which began to degrade after the incorporation of 2 boards. These results were derived from only 5 test scenarios to mitigate the prolonged runtime of the application. The findings indicate that the \texttt{Python\_Optimised} solution reached a plateau, showing no further improvements beyond the use of 2 boards. This plateau may be attributed to the limited runtime where adding additional boards did not yield performance gains, suggesting that the optimal performance with this improved solution can be achieved using only 2 boards instead of 4.
@@ -196,7 +174,7 @@ All three developed solutions significantly improved the performance of the \tex
 
 Results from the main setup (figure~\ref{fig:debate_fi_setup}) using the \texttt{Python\_Optimised} solution are presented in table~\ref{tab:debate_metrics}. A 43.5\% performance gain was observed, compared to the 62.1\% improvement noted in the local setup. This still represents a significant enhancement in performance. To further investigate the proposed solution, it would be beneficial to analyse results using a varying number of boards and their respective speed-ups in the main setup. This analysis could help determine the ideal number of boards for optimal performance. Additionally, no results were collected using single-board computers (SBCs) like the Raspberry Pi, primarily due to the time constraints of this project. Investigating the performance of the proposed solution on SBCs could be another valuable area of exploration.
 
-\begin{table}[htbp]
+\begin{table}[H]
 	\centering
 	\begin{tabular}{@{}lcc@{}} % 'l' for left-aligned text, 'c' for centered text
 		\toprule

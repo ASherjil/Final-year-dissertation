@@ -139,21 +139,10 @@ To use \texttt{AVX2} instructions for the application, the following changes wer
 	endif
 \end{lstlisting}
 
-Results collected from Raspberry Pi 4 can be seen in figures ~\ref{fig:mpbenchmark_rpi4_plot} and ~\ref{fig:mpbenchmark_rpi4_speedup_plot}. 
+Results collected from Raspberry Pi 4 can be seen in figures ~\ref{fig:mpbenchmark_rpi4_plot}.
 
-\begin{figure}[H] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi4.png} % Adjust the path and width as needed
-	\caption{Mean benchmark plot of results collected from Raspberry Pi 4(in seconds). The error bars represent 95\% confidence interval. (Lower is better).}
-	\label{fig:mpbenchmark_rpi4_plot} % Use this label to reference the figure
-\end{figure}
 
-\begin{figure}[H] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi4_speedup.png} % Adjust the path and width as needed
-	\caption{Speedup plot collected from Raspberry Pi 4 processor. The vertical black line shows the maximum physical cores of the processor. (Higher is better).}
-	\label{fig:mpbenchmark_rpi4_speedup_plot} % Use this label to reference the figure
-\end{figure}
+
 
 % Making the table fit in the page by scaling it down
 \begin{table}[h!]
@@ -345,12 +334,7 @@ void ConvLayer::Addpad(float *pfInput)
 
 Results collected from Raspberry Pi 4 can be seen in figures ~\ref{fig:mobilenet_rpi4_plot} and ~\ref{fig:mobilenet_rpi4_speedup}. 
 
-\begin{figure}[H] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_rpi4.png} % Adjust the path and width as needed
-	\caption{Mean benchmark plot of results collected from \texttt{Cortex A-72} processor(in milliseconds). (Lower is better).}
-	\label{fig:mobilenet_rpi4_plot} % Use this label to reference the figure
-\end{figure}
+
 
 \begin{figure}[H] % Positioning preference: here, top, bottom, page
 	\centering

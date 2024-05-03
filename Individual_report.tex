@@ -1,9 +1,60 @@
 % Options for packages loaded elsewhere
-\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 %
-\documentclass[12pt]{article}
+\documentclass[12pt, openany]{book}
 \usepackage[top=2.2cm, left=2.2cm, bottom=1.6cm, right=1.8cm]{geometry} % Custom margins
+
+\usepackage{pdfpages}
+\usepackage[titletoc]{appendix}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usepackage{float}
+\usepackage{array}  % for better column formatting
+
+\usepackage{seqsplit}
+
+
+\usepackage{cite} % for IEEE citation format
+
+% Adding titlesec package
+\usepackage{titlesec}
+\usepackage{tabularx} % for better table control
+
+% Redefining the chapter title format
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-50pt}{10pt}
+
+% Define colors for syntax highlighting
+\definecolor{commentcolor}{gray}{0.5}
+\definecolor{keywordcolor}{rgb}{0,0,1}
+\definecolor{stringcolor}{rgb}{0.58,0,0.82}
+
+\lstset{
+	language=C++,  % Set the language
+	basicstyle=\ttfamily\fontsize{10pt}{12pt}\selectfont,  % Set font style and size to 10pt with a normal line spacing of 12pt
+	breaklines=true,  % Automatic line breaking
+	captionpos=b,  % Caption at the bottom
+	numbers=left,  % Line numbers on the left
+	numberstyle=\tiny\color{gray},  % Styling for the line numbers
+	numbersep=5pt,  % Space between line numbers and code
+	xleftmargin=5pt,  % Margin on the left outside the frame
+	frame=none,  % No frame around the code
+	showstringspaces=false,  % Don't show spaces in strings with special character
+	tabsize=4,  % Size of tabs
+	commentstyle=\color{commentcolor}\ttfamily,
+	keywordstyle=\color{keywordcolor}\bfseries\ttfamily,  % Bold for keywords
+	stringstyle=\color{stringcolor}\ttfamily,
+	morecomment=[l][\color{magenta}]{\#}
+}
+
+\renewcommand{\bibname}{References}
+
+\usepackage{fontspec}
+\setmainfont{Carlito}
+
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
@@ -23,24 +74,26 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
-  \IfFileExists{parskip.sty}{%
-    \usepackage{parskip}
-  }{% else
-    \setlength{\parindent}{0pt}
-    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+	\IfFileExists{parskip.sty}{%
+		\usepackage{parskip}
+	}{% else
+		\setlength{\parindent}{0pt}
+		\setlength{\parskip}{6pt plus 2pt minus 1pt}}
 }{% if KOMA class
-  \KOMAoptions{parskip=half}}
+	\KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
+	hidelinks,
+	pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{longtable,booktabs}
+
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
 \makeatletter
@@ -65,406 +118,132 @@
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 
-\title{Individual Project
+% Include fancyhdr for header and footer customization
+\usepackage{fancyhdr}
 
-Final Report}
-\author{}
-\date{}
+% Page style setup
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot[C]{\thepage} % put the page number in the center of the footer
+\renewcommand{\headrulewidth}{0pt} % no line in header area
+\renewcommand{\footrulewidth}{0pt} % no line in footer area
+
+% Ensure the plain page style, used on chapter opening pages, is also empty
+\fancypagestyle{plain}{
+	\fancyhf{} % clear all header and footer fields for plain pages
+	\fancyfoot[C]{\thepage} % page number in the center of the footer on plain pages
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+
+
+
+\usepackage{titlesec}
+
+% Formatting the chapter title to remove "Chapter X"
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{}{0pt}{\Huge}
+
 
 \begin{document}
-\maketitle
+\begin{titlepage}
+	\centering
+	% Title
+	\vspace*{1cm} % Adjust the vertical space as needed
+	{\Huge\bfseries Individual Project\\[0.5cm] Final Report\par}
+	\vspace{2cm}
+	% Reset centering to left-align the rest
+	\raggedright
+	% ID Number
+	ID Number: B820928\par
+	
+	% Programme
+	Programme: Electronic and Electrical Engineering MEng\par
+	
+	% Module Code
+	Module Code: 23WSD030/23WS50META\par
+	
+	% Project Title
+	Project Title: Thread by Thread: Benchmarking and Comparing the Executions of Multi-threaded Applications on Multi-core Architectures.\par
+	
+	% Abstract Heading
+	\textbf{Abstract:}\par % Making 'Abstract' bold
+	% Abstract Text
+	% Background, aims, methods, results/conclusions.
 
-ID Number: B820928
+	Modern processors, both in desktop and embedded systems, increasingly feature multi-core architectures. This project aimed to optimise three applications using parallel computing techniques to decrease runtime and enhance scalability, testing them on desktop and embedded processors, including the Raspberry Pi 5. The applications included \texttt{mpbenchmark}, a benchmarking tool for multi-core performance; \texttt{MobileNet}, a machine learning application for image classification originally single-threaded and adapted to use the \texttt{OpenMP} library for multi-threading; and \texttt{DeBaTE-FI}, a GUI for testing microcontrollers for soft errors, optimised with Python’s multi-processing and a high-performance C++ library for telnet communication. Results showed significant performance improvements: \texttt{mpbenchmark} was redesigned with modern \texttt{C++} and SIMD intrinsics, improving scalability and design; \texttt{MobileNet} achieved an 87\% performance increase on desktop processors, with a 60-65\% gain on Raspberry Pi; and \texttt{Debate-FI} saw a 43.5-62.1\% reduction in runtime across various setups. The project's contributions include a novel \texttt{C++} benchmark tool, the first parallel version of the \texttt{MobileNet} CNN model, and an optimised \texttt{Debate-FI} platform, all demonstrating enhanced performance and scalability.
 
-Programme: Electronic and Electrical Engineering MEng
+\end{titlepage}
 
-Module Code: 23WSD030/23WS50META
-
-Project Title: Thread by Thread: Benchmarking and Comparing the Executions of Multi-threaded Applications on Multi-core Architectures.
-
-Abstract:
-Your abstract here
 
 \newpage
 \tableofcontents
+
+\chapter{Introduction}
+%Introduction(3-5 pages)
+The objective of this project is to enhance the performance of specific applications through parallel computing and to examine their efficiency on both desktop and embedded central processing units (CPUs). Parallel computing is a methodology employed in software development that enables certain segments of code to execute simultaneously, thereby diminishing the overall execution time of an application and augmenting its scalability. Contemporary processors boast a multi-core architecture, integrating multiple CPUs within a single chip, which is pivotal for facilitating parallelism\cite{modern_processors}.  
+
+Parallelism can be achieved via multi-threading and multi-processing techniques. A process refers to an active instance of a computer program, encompassing the program's code and its ongoing activities. Each process operates within its distinct memory address space and system resources, maintaining independence from other processes. However, processes can engage in communication with one another through various inter-process communication (IPC) mechanisms. Conversely, a thread represents the minimal unit of processing within a process. It executes within a process's context, sharing the process’s resources like memory and file descriptors, yet it retains its distinct execution state, including the program counter, register set, and stack. Threads can facilitate the parallel execution of code segments within a single process\cite{multi_processing_multi_threading_article}.
+
+Multi-processing involves an application initiating multiple processes to perform parallel operations, whereas multi-threading pertains to an application that generates multiple threads usually within a single process. This project concentrates on three main applications: the initial two are optimised utilizing multi-threading and their outcomes are assessed on both desktop and embedded processors. The embedded processors examined in this study include the Raspberry Pi 5, 4, and 3, with the Raspberry Pi 5 representing the forefront of technology as of 2024. The final application is a graphical user interface (GUI) application, where multi-processing is employed to attain parallelism. This application was developed by Alex Henneman, a Ph.D. student, under the supervision of Dr. Luciano Ost\cite{debate_fi_publication}. The aim here is to refine this application to minimize its execution time and enhance its scalability. 
+
+The first objective of this project is to improve the \texttt{mpbenchmark} multi-core benchmark tool, which simulates jet engine thermodynamics to evaluate CPU performance \cite{mpbenchmark_paper}. \texttt{mpbenchmark} generates two key outputs: runtime and the number of deadlines missed, the latter indicating performance quality based on thread completion times. This tool builds upon its predecessor, \texttt{JetBench}, which was originally developed in \texttt{C} using \texttt{OpenMP} \cite{JetBench_paper}. The transition to \texttt{mpbenchmark} addresses \texttt{JetBench}'s limitations and extends support to other languages like \texttt{Ada}, \texttt{C\#}, and \texttt{Java}, with \texttt{C} and \texttt{Ada} showing the best performance. However, these versions face challenges such as \texttt{C}'s lack of object-orientation and manual memory management issues \cite{c_language_drawbacks}, and \texttt{Ada}'s limited use outside defense and aerospace \cite{ada_langauge_uses}. To overcome these, the project aims to develop \texttt{mpbenchmark} using \texttt{C++}, leveraging modern enhancements which were introduced in the language since 2011\cite{evolution_of_C++}.
+
+The secondary objective of this project centres on enhancing the performance of \texttt{MobileNet}, a specialised machine learning algorithm within the realm of convolutional neural networks (\texttt{CNNs})\cite{mobilenet_paper}. \texttt{MobileNet} excels in the field of image classification, a process in which the algorithm is provided with an image and tasked with determining the image's corresponding class. While the intricate mathematical foundations and specific operational details of \texttt{MobileNet} are beyond the scope of this discussion, the primary focus is set on augmenting its efficiency. Originally designed as a sequential algorithm, \texttt{MobileNet} primarily operates on a single CPU core, which poses limitations on its execution speed and scalability. In pursuit of addressing these constraints, this project endeavours to transform the existing \texttt{C++} implementation of \texttt{MobileNet}\cite{mobilenet_repo} into a multi-threaded architecture. By doing so, the aim is to significantly decrease its runtime and enhance its scalability, thereby optimizing the algorithm's performance for more robust and efficient image classification tasks. This effort to transition \texttt{MobileNet} from a sequential to a multi-threaded model represents a strategic move to leverage the capabilities of modern multi-core processors, ensuring a more responsive and efficient computational process.
+
+The project's third objective is dedicated to the optimisation of a graphical user interface (\texttt{GUI}) application designed for microcontroller (\texttt{MCU}) testing, with a focus on minimising application runtime and bolstering its scalability. Named the \texttt{DeBaTE-FI} platform\cite{debate_fi_publication}, this application is crafted in \texttt{Python} and leverages both multi-threading and multi-processing techniques to achieve parallelism and concurrency. It's crucial to distinguish between concurrency and parallelism; in a concurrent framework, tasks are initiated, executed, and completed in overlapping intervals, without necessitating simultaneous operation. The operational flow of the \texttt{DeBaTE-FI} platform involves the user connecting \texttt{MCUs} to a computer, after which the application dispatches specific commands to these \texttt{MCUs}. Following the transmission of commands, the platform awaits responses from the \texttt{MCUs} and proceeds to log the requisite data into output files. Among the three applications addressed in this project, the \texttt{DeBaTE-FI} platform emerges as the most intricate, a complexity attributable to both the scale and the sophisticated nature of its functions. This optimisation effort aims to streamline these extensive operations, enhancing the application's performance and user experience.
+
+The report is structured as follows: It begins with a literature review that contextualises the research within the field by examining relevant studies. This is followed by the methodology section, which details strategies for identifying and addressing performance bottlenecks in the software, illustrated through Unified Modelling Language (UML) diagrams and code snippets. The results and discussion sections then present and analyse the performance enhancements observed in experiments conducted on desktop and Raspberry Pi models 3 through 5, with benchmark runtime and speedup plots quantifying the improvements. The discussion evaluates the optimisations' effectiveness and suggests future research directions, linking practical outcomes with theoretical implications. Appendices follow the conclusion, providing supplementary materials such as experimental setup details, system specifications, and extended code snippets to enhance understanding and ensure the report's transparency and reproducibility.
+
 \newpage
-
-\section{Introduction}
-The objective of this project is to enhance the performance of specific applications through parallel computing and to examine their efficiency on both desktop and embedded central processing units (CPUs). Parallel computing is a methodology employed in software development that enables certain segments of code to execute simultaneously, thereby diminishing the overall execution time of an application and augmenting its scalability. Contemporary processors boast a multi-core architecture, integrating multiple CPUs within a single chip, which is pivotal for facilitating parallelism.  
-
-Parallelism can be achieved via multi-threading and multi-processing techniques. A process refers to an active instance of a computer program, encompassing the program's code and its ongoing activities. Each process operates within its distinct memory address space and system resources, maintaining independence from other processes. However, processes can engage in communication with one another through various inter-process communication (IPC) mechanisms. Conversely, a thread represents the minimal unit of processing within a process. It executes within a process's context, sharing the process’s resources like memory and file descriptors, yet it retains its distinct execution state, including the program counter, register set, and stack. Threads can facilitate the parallel execution of code segments within a single process. 
-
-Multi-processing involves an application initiating multiple processes to perform parallel operations, whereas multi-threading pertains to an application that generates multiple threads usually within a single process. This project concentrates on three main applications: the initial two are optimised utilizing multi-threading and their outcomes are assessed on both desktop and embedded processors. The embedded processors examined in this study include the Raspberry Pi 5, 4, and 3, with the Raspberry Pi 5 representing the forefront of technology as of 2024. The final application is a graphical user interface (GUI) application, where multi-processing is employed to attain parallelism. This application was developed by Alex Henneman, a Ph.D. student, under the supervision of Dr. Luciano Ost. The aim here is to refine this application to minimize its execution time and enhance its scalability. 
-
-The inaugural objective of the main project focuses on the enhancement of a multi-core benchmark application named \texttt{mpbenchmark}. The essence of \texttt{mpbenchmark} lies in its capability to simulate real-time calculations of jet engine thermodynamics, serving as a multi-threaded tool to evaluate the multi-core performance of CPUs. This application represents an advanced iteration of its predecessor, \texttt{JetBench}. Initially crafted in \texttt{C} utilizing the \texttt{OpenMP} library, \texttt{JetBench} exhibited certain limitations inherent to its design and programming language. The evolution from \texttt{JetBench} to \texttt{mpbenchmark} marked a significant enhancement, rectifying the previous version's shortcomings. Moreover, \texttt{mpbenchmark} expanded its foundation by incorporating additional programming languages, including \texttt{Ada}, \texttt{C\#}, and \texttt{Java}. Despite this diversification, the implementations in \texttt{C} and \texttt{Ada} were identified as the most performant. However, it's noteworthy that the \texttt{C} and \texttt{Ada} versions of \texttt{mpbenchmark} still encounter language-specific constraints. Specifically, \texttt{C}'s lack of object-oriented capabilities, the requirement for manual memory management, and the absence of libraries for frequently utilized data structures and algorithms pose significant drawbacks. \texttt{Ada}, while offering some advantages, remains a specialized language predominantly employed within the defence and aerospace sectors. To transcend these limitations, this project aspires to develop a modernized version of \texttt{mpbenchmark} utilizing \texttt{C++}. This choice is motivated by \texttt{C++}'s ability to mitigate many of the challenges inherent to \texttt{C}, while still delivering comparable performance. The advent of \texttt{modern C++}, propelled by substantial updates to the core language post-2011, offers promising enhancements that are expected to refine \texttt{mpbenchmark}'s efficiency and functionality.
-
-The secondary objective of this project centres on enhancing the performance of \texttt{MobileNet}, a specialised machine learning algorithm within the realm of convolutional neural networks (\texttt{CNNs}). \texttt{MobileNet} excels in the field of image classification, a process in which the algorithm is provided with an image and tasked with determining the image's corresponding class. While the intricate mathematical foundations and specific operational details of \texttt{MobileNet} are beyond the scope of this discussion, the primary focus is set on augmenting its efficiency. Originally designed as a sequential algorithm, \texttt{MobileNet} primarily operates on a single CPU core, which poses limitations on its execution speed and scalability. In pursuit of addressing these constraints, this project endeavours to transform the existing \texttt{C++} implementation of \texttt{MobileNet} into a multi-threaded architecture. By doing so, the aim is to significantly decrease its runtime and enhance its scalability, thereby optimizing the algorithm's performance for more robust and efficient image classification tasks. This effort to transition \texttt{MobileNet} from a sequential to a multi-threaded model represents a strategic move to leverage the capabilities of modern multi-core processors, ensuring a more responsive and efficient computational process.
-
-The project's third objective is dedicated to the optimisation of a graphical user interface (\texttt{GUI}) application designed for microcontroller (\texttt{MCU}) testing, with a focus on minimising application runtime and bolstering its scalability. Named the \texttt{Debate-FI} platform, this application is crafted in \texttt{Python} and leverages both multi-threading and multi-processing techniques to achieve parallelism and concurrency. It's crucial to distinguish between concurrency and parallelism; in a concurrent framework, tasks are initiated, executed, and completed in overlapping intervals, without necessitating simultaneous operation. The operational flow of the \texttt{Debate-FI} platform involves the user connecting \texttt{MCUs} to a computer, after which the application dispatches specific commands to these \texttt{MCUs}. Following the transmission of commands, the platform awaits responses from the \texttt{MCUs} and proceeds to log the requisite data into output files. Among the three applications addressed in this project, the \texttt{Debate-FI} platform emerges as the most intricate, a complexity attributable to both the scale and the sophisticated nature of its functions. This optimisation effort aims to streamline these extensive operations, enhancing the application's performance and user experience.
-
-The structure of the report is organized as follows: it starts with a literature review, followed by methodology, results, and discussion sections. Appendices are provided after the conclusion for additional reference. The literature review section places the research within the existing body of knowledge by reviewing and interpreting relevant studies pertinent to the research question. This establishes a foundation for understanding the contributions of the project to the field. The methodology section outlines the strategies used to identify performance bottlenecks and potential optimization points within the software, including the introduction of new software designs. These are primarily illustrated through Unified Modeling Language (UML) diagrams and selected code snippets, offering a clear depiction of the proposed solutions. Following the methodology, the results and discussion sections report and analyse the findings from experiments conducted on both desktop and embedded processors, specifically targeting Raspberry Pi models 3 through 5. The findings are presented through benchmark runtime and speedup plots, providing a quantitative evaluation of the performance improvements. In the discussion section, the implications of these results are explored, evaluating the efficiency of the implemented optimizations and proposing directions for future research. This section seeks to provide an in-depth analysis that links the empirical findings with broader theoretical considerations. The appendices serve as a repository for supplementary materials, including details on the experimental PC setup, system specifications, and extended code snippets. These resources offer readers a deeper understanding of the technical aspects of the research, supporting the report's goals of transparency and reproducibility. 
-
-\newpage
-\section{Literature Review}
-\input{literature_review.tex}
-
-\section{Methodology}
-
-\subsection{Objective 1: \texttt{mpbenchmark}}
-\subsection{Objective 2: \texttt{MobileNet}}
-\subsection{Objective 3: \texttt{Debate-FI platform}}
-
-\section{Results and Discussion}
-
-\subsection{Objective 1: \texttt{mpbenchmark}}
-\subsection{Objective 2: \texttt{MobileNet}}
-\subsection{Objective 3: \texttt{Debate-FI platform}}
-
-\section{Conclusion}
-\section{References}
-
-\hypertarget{report-structure}{%
-\section{Report structure}\label{report-structure}}
-
-The report should be constructed as follows:
-
-\begin{itemize}
-\item
-  Title page -- Enter the required information including the abstract.
-  This is not included in the page count.
-
-  \begin{itemize}
-  \item
-    Abstract - a short self-contained summary of the project and key
-    outcome.
-  \end{itemize}
-\item
-  Table of Contents - a list of section headings with their associated
-  page numbers. This counts towards the page limit.
-\item
-  Introduction - an explanation of the project background, a description
-  of the project context, project aims and objectives and a brief
-  description of what is to come in the report. This counts towards the
-  page limit.
-\item
-  Main body of text - critical analysis of relevant literature, design
-  and methodology including justification, main research questions
-  and/or hypotheses, implementation of the research, presentation and
-  analysis of results, etc. . This counts towards the page limit.
-\item
-  Conclusion - commentary and interpretation of the main outcomes or
-  findings, relative significance of findings, implications of results,
-  limitations and future work. This counts towards the page limit.
-\item
-  Acknowledgements (if any). This counts towards the page limit.
-\item
-  References (and bibliography if required). These are not included in
-  the page count.
-\item
-  Appendices. These are not included in the page count.
-\end{itemize}
-
-Pages should be numbered consecutively starting from the title page.
-
-\hypertarget{title-page}{%
-\subsection{Title page}\label{title-page}}
-
-The title page must follow the standard format given in the first page
-of this document. The page must include your student ID number,
-programme name, module code, project title and abstract.
-
-\hypertarget{abstract}{%
-\subsection{Abstract}\label{abstract}}
-
-The abstract is a short summary that should state the objectives of the
-project described in the report and include brief conclusions such as
-any newly observed experimental results. The abstract should contain no
-more than 200 words and should be self-contained, i.e. no references
-should be included and readers should not have to read the report to
-understand it.
-
-\hypertarget{formatting}{%
-\section{Formatting}\label{formatting}}
-
-This document includes relevant Word styles needed to format your
-report. We {strongly recommend} you edit this document rather than
-trying to format another document with the Word styles.
-
-\hypertarget{language}{%
-\subsection{Language}\label{language}}
-
-All text is to be written in UK English unless quoting from or referring
-to non-UK sources. Except in quotations the writing style should be in
-the 3rd person, in the past tense and where possible gender neutral.
-Avoid using contractions and informal language.
-
-\hypertarget{font}{%
-\subsection{Font}\label{font}}
-
-The default font is Calibri and Cambria Math for equations. Arial is an
-acceptable alternative where Calibri is not available. Text should be 12
-pt (Font size).
-
-\hypertarget{headings}{%
-\subsection{Headings}\label{headings}}
-
-Three levels of automatically numbered paragraph styles {[}Heading 1,
-Heading 2 and Heading 3{]} are included in this document. Avoid going
-beyond three levels.
-
-\hypertarget{figures}{%
-\subsection{Figures}\label{figures}}
-
-Figures should normally be centred on the page. All figures must be
-captioned and numbered sequentially in a separate series, in a 1, 2, 3
-style and in the order they are referred to in the text. All figures
-must be referred to in the text. Figure captions should be centred on
-the page and preferably in a single line. Figures with multiple sections
-should be labelled in an (a), (b), (c) style. An example of a suitably
-captioned figure is shown below. It would be referred to in the text as
-Figure 1. Word style suitable for figure captions {[}Caption{]} is
-included in this document.
-
-Using illustrations taken from the work of others must be justifiable,
-and their origin must be identified by including the source as a
-reference and adding a conventional citation to the end of the caption,
-as illustrated in Figure 1 (this example is of a numeric referencing
-style). Where possible, produce your own figures.
-
-Figure 1 - Example of a multiple section figure {[}9{]}
-
-\hypertarget{tables}{%
-\subsection{Tables}\label{tables}}
-
-Tables should normally be centred on the page. All tables must be
-captioned and numbered sequentially in a separate series, in a 1, 2, 3
-style and in the order they are referred to in the text. All tables must
-be referred to in the text. Table captions should be centred on the page
-and preferably in a single line. An example of a suitably styled
-{[}Plain Table 2{]} table and accompanying caption is shown below. It
-would be referred to in the text as Table 1. Ensure the column widths
-are appropriate for the cell contents.
-
-\begin{longtable}[]{@{}llllll@{}}
-\toprule
-Column 1 & Column 2 & Column 3 & Column 4 & Column 5 & Column
-6\tabularnewline
-\midrule
-\endhead
-Data 1 & Data 2 & Data 3 & Data 4 & Data 5 & Data 6\tabularnewline
-Data 7 & Data 8 & Data 9 & Data 10 & Data 11 & Data 12\tabularnewline
-\bottomrule
-\end{longtable}
-
-Table 1 - Example table
-
-\hypertarget{equations}{%
-\subsection{Equations}\label{equations}}
-
-Equations should be entered using the {[}Equation{]} style. Equations
-should only be numbered when they are referred to in the text,
-un-numbered equations must follow in logical sequence from preceding
-text or equations. Equations should be numbered sequentially in a
-separate series in a 1, 2, 3 style and in the order they are referred to
-in the text. Numbers should be in round brackets and right-aligned.
-
-An example of a suitably numbered equation is shown below. It would be
-referred to in the text as Equation 1. Remember to state units of
-measurement.
-
-\(V = I \times R\) (1)
-
-where: \emph{V} is the voltage (V)
-
-\emph{I} is the current (A)
-
-\emph{R} is the resistance (Ω)
-
-or
-
-where: \emph{V} is the voltage (V), \emph{I} is the current (A) and
-\emph{R} is the resistance (Ω).
-
-Note that equation numbering in this form can cause problems in
-Microsoft Word when using the built-in equation editor (not the MathType
-clone). An equation in the same line as text is often automatically
-re-formatted. This is most easily overcome by putting the equation and
-its number in a one row, two column table.
-
-\hypertarget{text-formatting}{%
-\subsection{Text formatting}\label{text-formatting}}
-
-\begin{itemize}
-\item
-  Full stops should be followed by a single space.
-\item
-  All Figure, Table and Equation designations should be capitalised and
-  separated from their associated number by a non-breaking space, i.e.
-  the designation and number should be kept together.
-\item
-  Numbers should be separated from their units by a non-breaking space,
-  i.e. numbers and units should be kept together.
-\item
-  Normal text in figures and tables should be no smaller than 8 pt.
-\item
-  Vectors and matrices should be in 12 pt bold upright.
-\item
-  Variables should be in 12 pt italic. Italics should not be used for
-  emphasis.
-\item
-  Functions and operators should be in 12 pt upright.
-\item
-  Numeric indices should be in 9 pt upright.
-\item
-  Letter indices should normally be lower-case 9 pt italic.
-\item
-  All upper-case Greek letters should be in upright text.
-\item
-  A multiplication sign (×) should be used to indicate multiplication of
-  numbers and numerical values, including values with units such as 5 mm
-  × 4 mm. The letter ``x'' or a centre dot ``·'' should be avoided
-  (unless representing a dot product).
-\item
-  The decimal point should be represented by a dot on the line, i.e. a
-  full stop, not a centre dot or comma.
-\item
-  Exponential expressions should be written in superscript form, i.e. 12
-  × 10\textsuperscript{3} not 12E03.
-\item
-  Upright or stacked fractions are normally preferred but single line
-  variations using the solidus, such as x/y, are acceptable where
-  necessary or appropriate, e.g. in text.
-\item
-  Acronyms and abbreviations should be clearly defined the first time
-  they are used in the text by writing the term in full followed by the
-  acronym/abbreviation in round brackets.
-\item
-  All dates should be written in full to avoid day-month confusion, e.g.
-  August 29th 2005.
-\end{itemize}
-
-Note that a suitable paragraph style for the inset and bulleted
-paragraph used here {[}List Paragraph{]} is included in this document.
-
-\hypertarget{computer-code}{%
-\subsection{Computer code}\label{computer-code}}
-
-Short sections of computer code can be included in the main text where
-absolutely necessary in the explanation of an algorithm or process
-otherwise code should be in a separate Appendix section {[}see
-Appendices and supplementary material{]}. Code should be set apart from
-conventional text by formatting it in a monospaced font such as Courier
-New (10 pt upright is recommended).
-
-\hypertarget{footnotes-and-references}{%
-\subsection{Footnotes and References}\label{footnotes-and-references}}
-
-If it is absolutely necessary to add additional comment that would
-disrupt the flow of text, then a footnote can be used. Footnote markers
-in the text should be superscript Arabic numerals in 9 pt upright.
-Footnote text should be in left-justified 10 pt upright, single line
-spaced with 0 pt after.
-
-For IEEE and Vancouver referencing format, references should be numbered
-sequentially in a separate series in a 1, 2, 3 style and in the order
-that they are first cited in the text. Numbering is not used in Harvard
-referencing style. Citations can be positioned directly following the
-relevant phrase or at the end of a sentence or paragraph, but always
-before the full stop. All references should be cited in the text.
-References are an integral part of any report and should not be
-relegated to an appendix. The reference list should be given in either
-numerical or alphabetical order depending on the referencing style used.
-
-References should provide as much information as possible to allow the
-reader to locate the material concerned. Please see the Learn page
-WSLS01 - Wolfson School Library Support for detailed information on how
-to format IEEE, Vancouver and Harvard referencing styles. Please use one
-of these three styles.
-
-\hypertarget{references-or-bibliography}{%
-\subsection{References or
-bibliography?}\label{references-or-bibliography}}
-
-There is often confusion about the difference between references and a
-bibliography. A reference is made to a specific source that has been
-"referred to" or "cited" explicitly in the text. A citation means
-typically; "You should look at this it is important", "This material
-supports or contradicts my own", "I used this material or based elements
-of my work upon it" or "The quotation I have given came from here". A
-bibliography is simply a list of sources that the author has read that
-may be relevant to the subject but that have not been explicitly cited
-in the text. In general, there is no need for a bibliography in a final
-report, if a source is worth referring to then it should be cited
-explicitly. In addition, any relevant bibliographic material would
-probably have formed part of the interim presentation. The reference
-list should start on a new page and is not included in the page count.
-
-\hypertarget{using-the-interim-presentation}{%
-\subsection{Using the interim
-presentation}\label{using-the-interim-presentation}}
-
-If you use material from your interim presentation in your final report,
-do not duplicate material verbatim. The only exception to this is the
-project aims, objectives and deliverables which can be copied verbatim.
-Once you start writing, you will find most of the material will be
-expanded upon or updated. Duplicating verbatim is self-plagiarism (in
-that marks would be awarded twice for the same material) and would be
-detected by the text matching software by which all interim
-presentations and final reports are vetted. Figures taken from the
-interim presentation should be referenced in the caption. The final
-report must stand on its own two feet (self-contained) and the readers
-should not have to refer to the interim presentation to understand the
-final report. However, excessive duplication would not be looked on
-favourably by assessors, it might be better to simply refer to the
-interim presentation in the usual way, i.e.
+\section{Original contributions of this project}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  A.N. Other: "Project title", Project Interim Presentation, Wolfson
-  School of Mechanical, Electrical and Manufacturing Engineering,
-  Loughborough University, January 7th 2022.
+	\item A novel multi-core benchmark application has been developed using the latest \texttt{C++} features, this application built upon the previous \texttt{mpbenchmark}\cite{mpbenchmark_paper} application. It outperformed the previous \texttt{mpbenchmark} implementations in \texttt{C} and \texttt{Ada} by 11\%, 4\% and 1\% on desktop, Raspberry Pi 5 and 4 respectively in terms of run time and provided better speedup across threads. Moreover the novel benchmark application also utilised SIMD intrinsics which provided up to an astonishing 70\% reduction in run time, this unprecedented improvement provided means of analysing the target CPU's SIMD operations ability. A publication describing the contribution of this project has been submitted to SBCCI(Symposium on Integrated Circuits and System Design) conference part of IEEE(Institute of Electrical and Electronics Engineers) organisation. 
+	
+	\item The development of the first multi-threaded \texttt{MobileNet} CNN(convolutional neural network) model. This enhanced CNN model has been used as a case study to assess the behaviour of multi-threaded applications running on multi-core processors under neutron radiation. A publication describing this CNN model has been submitted to IEEE RADECS(``RADiation Effects on Components and Systems") conference.
+	
+	\item The optimised redesign of the \texttt{DeBaTE-FI} platform\cite{debate_fi_publication} resulted in up to 60\% reduction in run time. Moreover a high performance \texttt{C++} library was developed for \texttt{telnet} communication with microcontrollers. The enhanced \texttt{DeBaTE-FI} platform produced a 43.5\% reduction in run time when testing 36 \texttt{STM32F767ZI} microcontrollers when tested in PhD research office in Loughborough University(Figure ~\ref{fig:debate_fi_setup}).
 \end{enumerate}
 
-\hypertarget{acknowledgements}{%
-\subsection{\texorpdfstring{
-Acknowledgements}{ Acknowledgements}}\label{acknowledgements}}
 
-Acknowledgements should be in a separate section between the Conclusions
-and References. Examples include company and research grant support.
+\chapter{Literature review}
+% Literature review(6-10 pages)
+\input{literature_review.tex}
 
-\hypertarget{appendices-and-supplementary-material}{%
-\subsection{Appendices and supplementary
-material}\label{appendices-and-supplementary-material}}
 
-Additional material, e.g. mathematical derivations that may interrupt
-the flow of an argument, should form a separate appendix section.
-Appendices should not be used to get around the page count limit. If the
-reader needs to keep referring to material in the appendix to understand
-the main report, that material should be in the main report not the
-appendix. If the material can be found in another source, then this
-should be cited as a reference not reproduced.
+\chapter{Methodology}
+%Methodology(5-7 pages)
+\input{methodology.tex}
 
-Appendices should be numbered sequentially in a separate series in a 1,
-2, 3 style and in the order that they are referred to in the text.
-Appendix designations should be capitalised and separated from their
-associated number by a non-breaking space, i.e. the designation and
-number should be kept together. All appendices must be cited in the text
-with their designation and number in square brackets, e.g. {[}Appendix
-1{]}.
+\chapter{Results and Discussion}
+%Results and Discussion(8-10 pages)
+\input{results_and_discussion.tex}
 
-\hypertarget{page-limits}{%
-\subsection{Page limits}\label{page-limits}}
 
-The main text of the report should be no more than 30 pages (sides of
-A4) and any appendices should be no more than 40 pages (sides of A4).
-The 30 (+ 40) page limit is inclusive; i.e. it includes everything that
-is deemed to be required. The cover page and reference list are not
-included in the page count.
+\chapter{Conclusion}
+%Conclusion(2 pages)
+% Your conclusion content here.
+\input{conclusion.tex}
 
-Individual project final report 2023-24 v5.docx -- Keith Gregory, Chris
-Ward, Chinthana Panagamuwa -- Revision 8 -- 13 February 2024
+% Ensure bibliography starts on a new page and add it to the ToC.
+\clearpage % Ensures bibliography starts on a new page.
+\phantomsection % Ensures that the hyperlink anchor is correctly placed here.
+\addcontentsline{toc}{chapter}{References}
+\bibliographystyle{IEEEtran}
+\bibliography{references} % Assumes your bibliography is in the 'references.bib' file.
+
+% Ensure appendices start on a new page and add it to the ToC.
+\newpage
+\chapter{Appendices}
+\begin{appendices}
+	\renewcommand{\thesection}{\arabic{section}}
+	\input{appendix.tex}  % Assuming this file contains your appendices.
+\end{appendices}
+
 
 \end{document}
+
+
+

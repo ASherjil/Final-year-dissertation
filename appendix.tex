@@ -1,4 +1,4 @@
-\section{System and Raspberry Pi specifications}
+\section{Appendix (System and Raspberry Pi specifications)}
 \label{sec:sysetm_specs}
 
 The following setup was used to collect results and benchmarking data:
@@ -23,11 +23,13 @@ The following setup was used to collect results and benchmarking data:
 		C\# (.NET SDK)         & 7.0.117             & 6.8.0.15     &  6.8.0.15\\
 		\bottomrule
 	\end{tabular}
-	\caption{Specifications and software Versions of Desktop and Raspberry Pi Systems\cite{desktop_specs}\cite{rpi_specs}\cite{rasp_pi5_pi4_comparision}.}
+	\caption{Specifications and software Versions of Desktop and Raspberry Pi Systems\cite{rasp_pi5_pi4_comparision}\cite{desktop_specs}\cite{rpi_specs}.}
 	\label{tab:spec_comparisons}
 \end{table}
 
-\section{Objective 1: \texttt{mpbenchmark}}
+\newpage
+\section{Appendix (Objective 1: \texttt{mpbenchmark})}
+\label{sec:app_obj1}
 
 Profiling results using \texttt{Valgrind/Calgrind} are shown in figure ~\ref{fig:mpbenchmark_profiled}.
 
@@ -38,7 +40,42 @@ Profiling results using \texttt{Valgrind/Calgrind} are shown in figure ~\ref{fig
 	\label{fig:mpbenchmark_profiled} % Use this label to reference the figure
 \end{figure} 
 
-Code for implementing the approximation of $\pi$ using single and double point floating precision with \texttt{NEON} instructions are shown in listings ~\ref{lst:neon_float} and ~\ref{lst:neon_double}.
+Listing ~\ref{lst:avx2_horizontal_sum_function} shows the code for the horizontal sum function for performing the sum of \texttt{256-bit} vector using \texttt{AVX2} instructions. 
+
+\begin{lstlisting}[
+	caption={Horizontal sum function for \texttt{256-bit} \texttt{AVX2} vector.},
+	label={lst:avx2_horizontal_sum_function}
+	]
+// Check for AVX2 support
+#if defined(__AVX2__)
+#include <immintrin.h> // AVX2 and earlier
+
+/**
+* @brief Helper function used when approximating pi using AVX2 instructions. 
+* It is used for performing horizontal sum of a vector. 
+* @param v vector. 
+* @return double summed vector.
+*/
+inline double hsum256_pd(__m256d v) {
+	__m256d temp1 = _mm256_hadd_pd(v, v);
+	__m256d temp2 = _mm256_permute2f128_pd(temp1, temp1, 0x01);
+	__m256d temp3 = _mm256_add_pd(temp1, temp2);
+	double result[4];
+	_mm256_storeu_pd(result, temp3);
+	return result[0]; // The sum of all elements in the vector
+}
+
+#elif defined(__ARM_NEON)
+// if ARM NEON instructions are available then include the necessary header file 
+#include <arm_neon.h>
+
+#else
+// neither AVX2 or NEON instructions found 
+#endif
+
+\end{lstlisting}
+
+Code for implementing the approximation of $\pi$ using single and double point floating precision with \texttt{NEON} instructions are shown in Listings ~\ref{lst:neon_float} and ~\ref{lst:neon_double}.
 
 \begin{lstlisting}[
 	caption={Approximation of $\pi$ using single point precision \texttt{NEON} instructions.},
@@ -116,7 +153,7 @@ double Worker::approximatePi(){
 	}
 \end{lstlisting}
 
-To use \texttt{AVX2} instructions for the application, the following changes were made to the \texttt{CMakeLists.txt} file, however no changes were required to use \texttt{NEON} instructions, see listing ~\ref{lst:cmake_simd}.
+To use \texttt{AVX2} instructions for the application, the following changes were made to the \texttt{CMakeLists.txt} file, however no changes were required to use \texttt{NEON} instructions, see Listing ~\ref{lst:cmake_simd}.
 
 \begin{lstlisting}[
 	language=bash,
@@ -139,10 +176,14 @@ To use \texttt{AVX2} instructions for the application, the following changes wer
 	endif
 \end{lstlisting}
 
-Results collected from Raspberry Pi 4 can be seen in figures ~\ref{fig:mpbenchmark_rpi4_plot}.
+Figure ~\ref{fig:mpbenchmark_rpi3_plot} shows the results collected from Raspberry Pi 3 (\texttt{Cortex-A53} processor).
 
-
-
+\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi3_results.png} % Adjust the path and width as needed
+	\caption{Mean benchmark plot in seconds shown top. Speedup plot shown bottom.}
+	\label{fig:mpbenchmark_rpi3_plot} % Use this label to reference the figure
+\end{figure}
 
 % Making the table fit in the page by scaling it down
 \begin{table}[h!]
@@ -151,10 +192,10 @@ Results collected from Raspberry Pi 4 can be seen in figures ~\ref{fig:mpbenchma
 		\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
 			\hline
 			\textbf{Cores} & \textbf{C} & \textbf{C++} & \textbf{C++(NEON single)} & \textbf{C++(NEON double)} & \textbf{Java} & \textbf{JavaForkJoin} & \textbf{C\#} & \textbf{Ada} \\ \hline
-			1              & 0           &0              & 0                          & 0                          &0              &0                      &0              &0             \\ \hline
-			2              & 0          & 0             &  0                         &  0                         & 0.18             &0                      &0              &0             \\ \hline
-			4              & 0           & 0             & 0                          & 0                          &1.33              &0                      & 0             &0             \\ \hline
-			8              & 0           & 0            &  0                         &   0                        & 8.21             & 1.03                     &0              &0             \\ \hline
+			1              & 0           &0             & 0                         & 0                         &0               &0                     &0              &0             \\ \hline
+			2              & 0          & 0             &  0                        &  0                         & 0.18         &0                     &0              &0             \\ \hline
+			4              & 0           & 0            & 0                         & 0                          &1.33          &0                     & 0             &0             \\ \hline
+			8              & 0           & 0            &  0                        &   0                        & 8.21         & 1.03               &0              &0             \\ \hline
 		\end{tabular}
 	}
 	\caption{Mean deadlines missed, results collected from the Raspberry Pi 5.}
@@ -178,7 +219,28 @@ Results collected from Raspberry Pi 4 can be seen in figures ~\ref{fig:mpbenchma
 	\label{tab:mpbenchmark_rpi4} % Label for referencing
 \end{table}
 
-\section{Objective 2: \texttt{MobileNet}}
+% Setting the table with specified font size, without dynamic resizing
+\begin{table}[h!]
+	\centering
+	{\fontsize{12pt}{12pt}\selectfont % Set font size to 10pt with a 12pt line spacing
+		\begin{tabular}{|c|c|c|c|c|c|c|}
+			\hline
+			\textbf{Cores} & \textbf{C} & \textbf{C++} & \textbf{Java} & \textbf{JavaForkJoin} & \textbf{C\#} & \textbf{Ada} \\ \hline
+			1              & 1.17       & 1.30         & 1.60          & 1.10                 & 3.40         & 1.33         \\ \hline
+			2              & 2.80       & 2.47         & 2.73          & 2.40                 & 31.63        & 2.97         \\ \hline
+			4              & 3.61       & 3.67         & 5.13          & 4.65                 & 19.33        & 3.83         \\ \hline
+			8              & 44.60      & 46.55        & 30.2          & 25.23                & 46.63        & 43.57        \\ \hline
+		\end{tabular}
+	}
+	\caption{Mean deadlines missed, results collected from the Raspberry Pi 3.}
+	\label{tab:mpbenchmark_rpi3} % Label for referencing
+\end{table}
+
+
+
+
+\newpage
+\section{Appendix (Objective 2: \texttt{MobileNet})}
 
 The \texttt{MobileNet} repository\cite{mobilenet_repo} contained some outdated portions of the code which were updated, certain parts of the code contained Chinese language which were translated into English and \texttt{CMake} build software was used to setup the \texttt{MobileNet} application. 
 
@@ -220,6 +282,15 @@ float* ReadData::ReadInput(const char* pcName) {
 }
 \end{lstlisting}
 
+Figure ~\ref{fig:mobilenet_classes} shows the translation from Chinese to English language. The classes that the \texttt{MobileNet} was trained on were in Chinese therefore it was translated into English, found inside the \texttt{Network.cpp} file of the original project\cite{mobilenet_repo}. 
+
+\begin{figure}[H] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_classes.png} % Adjust the path and width as needed
+	\caption{\texttt{GitHub} page showing the commit diff when classes were translated from Chinese to English. }
+	\label{fig:mobilenet_classes} % Use this label to reference the figure
+\end{figure}
+
 The application was modified to have three command line arguments, this served primarily to make testing and collecting benchmark results easier for development purposes. The three arguments are as follows and can be seen in code in listing ~\ref{lst:mobilenet_command_line_arguments}:
 
 \begin{enumerate}
@@ -252,7 +323,7 @@ The application was modified to have three command line arguments, this served p
 		if (argc > 3) {
 			numThreads = std::atoi(argv[3]);
 			if (numThreads <= 0) {
-				numThreads = omp_get_max_threads();  // Ensure OpenMP is included if used
+				numThreads = omp_get_max_threads();  
 			}
 		}
 		//--------------------------------------------------
@@ -261,7 +332,7 @@ The application was modified to have three command line arguments, this served p
 \end{lstlisting}
 
 
-\texttt{Calgrind} profiling results from the \texttt{MobileNet} application show the following functions with the highest self-cost, these were \texttt{ConvLayer::forward}, \texttt{BatchNormalLayer::forward} and \texttt{ConvLayer::Addpad} as seen in figure ~\ref{fig:mobilenet_profiling}.
+\texttt{Calgrind} profiling results from the \texttt{MobileNet} application show the following functions with the highest self-cost, these were \texttt{ConvLayer::forward()}, \texttt{BatchNormalLayer::forward()} and \texttt{ConvLayer::Addpad()} as seen in figure ~\ref{fig:mobilenet_profiling}.
 
 \begin{figure}[H] % Positioning preference: here, top, bottom, page
 	\centering
@@ -271,7 +342,7 @@ The application was modified to have three command line arguments, this served p
 \end{figure}
 
 
-The parallelisation of functions \texttt{BatchNormalLayer::forward} and \texttt{ConvLayer::Addpad} can be found in listings ~\ref{lst:mobilenet_function1_parallel} and ~\ref{lst:mobilenet_function2_parallel}.
+The parallelisation of functions \texttt{BatchNormalLayer::forward()} and \texttt{ConvLayer::Addpad()} can be found in listings ~\ref{lst:mobilenet_function1_parallel} and ~\ref{lst:mobilenet_function2_parallel}.
 
 \begin{lstlisting}[
 	caption={Parallelising the \texttt{BatchNormalLayer::forward()} function.},
@@ -331,19 +402,8 @@ void ConvLayer::Addpad(float *pfInput)
 % Addition of command line arguments
 % Valgrind results 
 % All the parallelised code
-
-Results collected from Raspberry Pi 4 can be seen in figures ~\ref{fig:mobilenet_rpi4_plot} and ~\ref{fig:mobilenet_rpi4_speedup}. 
-
-
-
-\begin{figure}[H] % Positioning preference: here, top, bottom, page
-	\centering
-	\includegraphics[width=1\textwidth, height=20cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_rpi4_speedup.png} % Adjust the path and width as needed
-	\caption{Speedup plot comparing different solutions with results collected from \texttt{Cortex A-72} processor. (Higher is better).}
-	\label{fig:mobilenet_rpi4_speedup} % Use this label to reference the figure
-\end{figure}
-
-\section{Objective 3: \texttt{DeBaTE-FI} platform}
+\newpage
+\section{Appendix (Objective 3: \texttt{DeBaTE-FI} platform)}
 \label{sec:app_obj3}
 
 The application was profiled using \texttt{py-spy} tool. The application spawned multiple processes, therefore they were profiled separately. Profiling results from the process responsible for the GUI of the application are shown in figure ~\ref{fig:debate_profile_1} and the profiling results from the process responsible for communicating with the MCUs are shown in figure ~\ref{fig:debate_profile_2}.
@@ -362,6 +422,14 @@ The application was profiled using \texttt{py-spy} tool. The application spawned
 	\label{fig:debate_profile_2} % Use this label to reference the figure
 \end{figure}
 
+Figure ~\ref{fig:debate_fi_telnetlibcpp} shows the thought process of designing the \texttt{C++} wrapper class to use the necessary \texttt{telnet} library for \texttt{DeBaTE-FI} platform. 
+
+\begin{figure}[H] % Positioning preference: here, top, bottom, page
+	\centering
+	\includegraphics[width=0.50\textwidth]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/debate_fi_C++_design.png} % Adjust the path and width as needed
+	\caption{Design process for creating the \texttt{telnet} library using \texttt{C++}.}
+	\label{fig:debate_fi_telnetlibcpp} % Use this label to reference the figure
+\end{figure}
 
 The \texttt{C++} wrapper was created by emulating the \texttt{Python's} \texttt{telnetlib} library.Using the code in listing ~\ref{lst:open_ocd_class} the following functions require emulation:
 
@@ -377,7 +445,6 @@ The \texttt{C++} wrapper was created by emulating the \texttt{Python's} \texttt{
 	caption={Functions used from \texttt{Python's} \texttt{telnetlib} library.},
 	label={lst:open_ocd_class}
 	]
-	
 import telnetlib
 
 class OpenOCD:
@@ -542,7 +609,7 @@ PYBIND11_MODULE(telnetlibcpp, m) {
 The final step was to compile the \texttt{C++} codes into a shared library(\texttt{.so}) file which was then placed in the directory of the \texttt{Python} application where it needed to be used. Listing ~\ref{lst:cmake_so_file} shows hows this shared library file was created. 
 
 \begin{lstlisting}[
-	caption={\texttt{CMake} file to produce a shared library(\texttt{.so}) file of our \texttt{C++} class.},
+	caption={\texttt{CMake} file to produce a shared library(\texttt{.so}) file of the \texttt{C++} class.},
 	label={lst:cmake_so_file}
 	]
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)

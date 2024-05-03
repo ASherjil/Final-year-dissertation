@@ -5,13 +5,16 @@
 \usepackage[top=2.2cm, left=2.2cm, bottom=1.6cm, right=1.8cm]{geometry} % Custom margins
 
 \usepackage{pdfpages}
-\usepackage{appendix}
+\usepackage[titletoc]{appendix}
 
 \usepackage{listings}
 \usepackage{xcolor}
 
 \usepackage{float}
 \usepackage{array}  % for better column formatting
+
+\usepackage{seqsplit}
+
 
 \usepackage{cite} % for IEEE citation format
 
@@ -169,7 +172,7 @@
 	% Abstract Text
 	% Background, aims, methods, results/conclusions.
 
-	Modern processors, both in desktop and embedded systems, increasingly feature multi-core architectures. This project aimed to optimise three applications using parallel computing techniques to decrease runtime and enhance scalability, testing them on desktop and embedded processors, including the Raspberry Pi 5. The applications included \texttt{mpbenchmark}, a benchmarking tool for multi-core performance; \texttt{MobileNet}, a machine learning application for image classification originally single-threaded and adapted to use the \texttt{OpenMP} library for multi-threading; and \texttt{DeBaTE-FI}, a GUI for testing microcontrollers for soft errors, optimised with Python’s multi-processing and a high-performance C++ library for telnet communication. Results showed significant performance improvements: \texttt{mpbenchmark} was redesigned with modern \texttt{C++} and SIMD intrinsics, improving scalability and design; \texttt{MobileNet} achieved an 87\% performance increase on desktop processors, with a 60-65\% gain on Raspberry Pi; and \texttt{Debate-FI} saw a 43.5-62.1\% reduction in runtime across various setups. The project's contributions include a novel \texttt{C++} benchmark tool, a parallel version of the \texttt{MobileNet} CNN model, and an optimised \texttt{Debate-FI} platform, all demonstrating enhanced performance and scalability.
+	Modern processors, both in desktop and embedded systems, increasingly feature multi-core architectures. This project aimed to optimise three applications using parallel computing techniques to decrease runtime and enhance scalability, testing them on desktop and embedded processors, including the Raspberry Pi 5. The applications included \texttt{mpbenchmark}, a benchmarking tool for multi-core performance; \texttt{MobileNet}, a machine learning application for image classification originally single-threaded and adapted to use the \texttt{OpenMP} library for multi-threading; and \texttt{DeBaTE-FI}, a GUI for testing microcontrollers for soft errors, optimised with Python’s multi-processing and a high-performance C++ library for telnet communication. Results showed significant performance improvements: \texttt{mpbenchmark} was redesigned with modern \texttt{C++} and SIMD intrinsics, improving scalability and design; \texttt{MobileNet} achieved an 87\% performance increase on desktop processors, with a 60-65\% gain on Raspberry Pi; and \texttt{Debate-FI} saw a 43.5-62.1\% reduction in runtime across various setups. The project's contributions include a novel \texttt{C++} benchmark tool, the first parallel version of the \texttt{MobileNet} CNN model, and an optimised \texttt{Debate-FI} platform, all demonstrating enhanced performance and scalability.
 
 \end{titlepage}
 
@@ -177,14 +180,15 @@
 \newpage
 \tableofcontents
 
-\chapter{Introduction(3-5 pages)}
+\chapter{Introduction}
+%Introduction(3-5 pages)
 The objective of this project is to enhance the performance of specific applications through parallel computing and to examine their efficiency on both desktop and embedded central processing units (CPUs). Parallel computing is a methodology employed in software development that enables certain segments of code to execute simultaneously, thereby diminishing the overall execution time of an application and augmenting its scalability. Contemporary processors boast a multi-core architecture, integrating multiple CPUs within a single chip, which is pivotal for facilitating parallelism\cite{modern_processors}.  
 
 Parallelism can be achieved via multi-threading and multi-processing techniques. A process refers to an active instance of a computer program, encompassing the program's code and its ongoing activities. Each process operates within its distinct memory address space and system resources, maintaining independence from other processes. However, processes can engage in communication with one another through various inter-process communication (IPC) mechanisms. Conversely, a thread represents the minimal unit of processing within a process. It executes within a process's context, sharing the process’s resources like memory and file descriptors, yet it retains its distinct execution state, including the program counter, register set, and stack. Threads can facilitate the parallel execution of code segments within a single process\cite{multi_processing_multi_threading_article}.
 
 Multi-processing involves an application initiating multiple processes to perform parallel operations, whereas multi-threading pertains to an application that generates multiple threads usually within a single process. This project concentrates on three main applications: the initial two are optimised utilizing multi-threading and their outcomes are assessed on both desktop and embedded processors. The embedded processors examined in this study include the Raspberry Pi 5, 4, and 3, with the Raspberry Pi 5 representing the forefront of technology as of 2024. The final application is a graphical user interface (GUI) application, where multi-processing is employed to attain parallelism. This application was developed by Alex Henneman, a Ph.D. student, under the supervision of Dr. Luciano Ost\cite{debate_fi_publication}. The aim here is to refine this application to minimize its execution time and enhance its scalability. 
 
-The first objective of this project is to improve the \texttt{mpbenchmark} multi-core benchmark tool, which simulates jet engine thermodynamics to evaluate CPU performance \cite{mpbenchmark_paper}. \texttt{mpbenchmark} generates two key outputs: runtime and the number of deadlines missed, the latter indicating performance quality based on thread completion times. This tool builds upon its predecessor, \texttt{JetBench}, which was originally developed in \texttt{C} using \texttt{OpenMP} \cite{JetBench_paper}. The transition to \texttt{mpbenchmark} addresses \texttt{JetBench}'s limitations and extends support to other languages like \texttt{Ada}, \texttt{C\#}, and \texttt{Java}, with \texttt{C} and \texttt{Ada} showing the best performance. However, these versions face challenges such as \texttt{C}'s lack of object-orientation and manual memory management issues \cite{c_language_drawbacks}, and \texttt{Ada}'s limited use outside defense and aerospace \cite{ada_langauge_uses}. To overcome these, the project aims to develop \texttt{mpbenchmark} using \texttt{C++}, leveraging modern enhancements to improve functionality and efficiency since 2011.
+The first objective of this project is to improve the \texttt{mpbenchmark} multi-core benchmark tool, which simulates jet engine thermodynamics to evaluate CPU performance \cite{mpbenchmark_paper}. \texttt{mpbenchmark} generates two key outputs: runtime and the number of deadlines missed, the latter indicating performance quality based on thread completion times. This tool builds upon its predecessor, \texttt{JetBench}, which was originally developed in \texttt{C} using \texttt{OpenMP} \cite{JetBench_paper}. The transition to \texttt{mpbenchmark} addresses \texttt{JetBench}'s limitations and extends support to other languages like \texttt{Ada}, \texttt{C\#}, and \texttt{Java}, with \texttt{C} and \texttt{Ada} showing the best performance. However, these versions face challenges such as \texttt{C}'s lack of object-orientation and manual memory management issues \cite{c_language_drawbacks}, and \texttt{Ada}'s limited use outside defense and aerospace \cite{ada_langauge_uses}. To overcome these, the project aims to develop \texttt{mpbenchmark} using \texttt{C++}, leveraging modern enhancements which were introduced in the language since 2011\cite{evolution_of_C++}.
 
 The secondary objective of this project centres on enhancing the performance of \texttt{MobileNet}, a specialised machine learning algorithm within the realm of convolutional neural networks (\texttt{CNNs})\cite{mobilenet_paper}. \texttt{MobileNet} excels in the field of image classification, a process in which the algorithm is provided with an image and tasked with determining the image's corresponding class. While the intricate mathematical foundations and specific operational details of \texttt{MobileNet} are beyond the scope of this discussion, the primary focus is set on augmenting its efficiency. Originally designed as a sequential algorithm, \texttt{MobileNet} primarily operates on a single CPU core, which poses limitations on its execution speed and scalability. In pursuit of addressing these constraints, this project endeavours to transform the existing \texttt{C++} implementation of \texttt{MobileNet}\cite{mobilenet_repo} into a multi-threaded architecture. By doing so, the aim is to significantly decrease its runtime and enhance its scalability, thereby optimizing the algorithm's performance for more robust and efficient image classification tasks. This effort to transition \texttt{MobileNet} from a sequential to a multi-threaded model represents a strategic move to leverage the capabilities of modern multi-core processors, ensuring a more responsive and efficient computational process.
 
@@ -192,7 +196,7 @@ The project's third objective is dedicated to the optimisation of a graphical us
 
 The report is structured as follows: It begins with a literature review that contextualises the research within the field by examining relevant studies. This is followed by the methodology section, which details strategies for identifying and addressing performance bottlenecks in the software, illustrated through Unified Modelling Language (UML) diagrams and code snippets. The results and discussion sections then present and analyse the performance enhancements observed in experiments conducted on desktop and Raspberry Pi models 3 through 5, with benchmark runtime and speedup plots quantifying the improvements. The discussion evaluates the optimisations' effectiveness and suggests future research directions, linking practical outcomes with theoretical implications. Appendices follow the conclusion, providing supplementary materials such as experimental setup details, system specifications, and extended code snippets to enhance understanding and ensure the report's transparency and reproducibility.
 
-
+\newpage
 \section{Original contributions of this project}
 
 \begin{enumerate}
@@ -204,18 +208,22 @@ The report is structured as follows: It begins with a literature review that con
 \end{enumerate}
 
 
-\chapter{Literature review(6-10 pages)}
+\chapter{Literature review}
+% Literature review(6-10 pages)
 \input{literature_review.tex}
 
 
-\chapter{Methodology(5-7 pages)}
+\chapter{Methodology}
+%Methodology(5-7 pages)
 \input{methodology.tex}
 
-\chapter{Results and Discussion(8-10 pages)}
+\chapter{Results and Discussion}
+%Results and Discussion(8-10 pages)
 \input{results_and_discussion.tex}
 
 
-\chapter{Conclusion(2 pages)}
+\chapter{Conclusion}
+%Conclusion(2 pages)
 % Your conclusion content here.
 \input{conclusion.tex}
 
@@ -228,8 +236,9 @@ The report is structured as follows: It begins with a literature review that con
 
 % Ensure appendices start on a new page and add it to the ToC.
 \newpage
-\chapter{Appendices(Not completed)}
+\chapter{Appendices}
 \begin{appendices}
+	\renewcommand{\thesection}{\arabic{section}}
 	\input{appendix.tex}  % Assuming this file contains your appendices.
 \end{appendices}
 

@@ -31,7 +31,7 @@ The following setup was used to collect results and benchmarking data:
 \section{Appendix (Objective 1: \texttt{mpbenchmark})}
 \label{sec:app_obj1}
 
-Profiling results using \texttt{Valgrind/Calgrind} are shown in figure ~\ref{fig:mpbenchmark_profiled}.
+ Figure ~\ref{fig:mpbenchmark_profiled} shows the profiling results using \texttt{Valgrind/Calgrind}. 
 
 \begin{figure}[H] % Positioning preference: here, top, bottom, page
 	\centering
@@ -40,9 +40,10 @@ Profiling results using \texttt{Valgrind/Calgrind} are shown in figure ~\ref{fig
 	\label{fig:mpbenchmark_profiled} % Use this label to reference the figure
 \end{figure} 
 
+Listing ~\ref{lst:pi_approximation_2} shows the SIMD enhanced code using \texttt{AVX2} instructions of the approximation of $\pi$, detailed in the algorithm (Figure ~\ref{fig:_simd_algorithm}).
 
 \begin{lstlisting}[
-	caption={SIMD enhanced code for approximation of $\pi$ using \texttt{AVX2} instructions. (Horizontal sum function in line 28 can be found in appendix).},
+	caption={SIMD enhanced code for approximation of $\pi$ using \texttt{AVX2} instructions.},
 	label={lst:pi_approximation_2}
 	]
 	double Worker::approximatePi(){
@@ -222,7 +223,7 @@ To use \texttt{AVX2} instructions for the application, the following changes wer
 
 Figure ~\ref{fig:mpbenchmark_rpi3_plot} shows the results collected from Raspberry Pi 3 (\texttt{Cortex-A53} processor).
 
-\begin{figure}[htbp] % Positioning preference: here, top, bottom, page
+\begin{figure}[H] % Positioning preference: here, top, bottom, page
 	\centering
 	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mpbenchmark_rpi3_results.png} % Adjust the path and width as needed
 	\caption{Mean benchmark plot in seconds shown top. Speedup plot shown bottom.}
@@ -288,7 +289,7 @@ Figure ~\ref{fig:mpbenchmark_rpi3_plot} shows the results collected from Raspber
 
 The \texttt{MobileNet} repository\cite{mobilenet_repo} contained some outdated portions of the code which were updated, certain parts of the code contained Chinese language which were translated into English and \texttt{CMake} build software was used to setup the \texttt{MobileNet} application. 
 
-The main updates required to the original \texttt{MobileNet} repository\cite{mobilenet_repo} were inside the \texttt{readdata.cpp} file (listing ~\ref{lst:mobilenet_updates}). 
+The main updates required to the original \texttt{MobileNet} repository\cite{mobilenet_repo} were inside the \texttt{readdata.cpp} file (Listing ~\ref{lst:mobilenet_updates}). 
 
 \begin{lstlisting}[
 	caption={Updating the \texttt{ReadData::ReadInput()} function to use the latest \texttt{OpenCV} functions.},
@@ -335,7 +336,7 @@ Figure ~\ref{fig:mobilenet_classes} shows the translation from Chinese to Englis
 	\label{fig:mobilenet_classes} % Use this label to reference the figure
 \end{figure}
 
-The application was modified to have three command line arguments, this served primarily to make testing and collecting benchmark results easier for development purposes. The three arguments are as follows and can be seen in code in listing ~\ref{lst:mobilenet_command_line_arguments}:
+The application was modified to have three command line arguments, this served primarily to make testing and collecting benchmark results, making the process easier for development purposes. The three arguments are as follows and can be seen in code in listing ~\ref{lst:mobilenet_command_line_arguments}:
 
 \begin{enumerate}
 	\item \texttt{test\_all}: This argument can be altered to either test one image or test all images in the data folder.  

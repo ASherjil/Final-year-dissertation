@@ -40,6 +40,50 @@ Profiling results using \texttt{Valgrind/Calgrind} are shown in figure ~\ref{fig
 	\label{fig:mpbenchmark_profiled} % Use this label to reference the figure
 \end{figure} 
 
+
+\begin{lstlisting}[
+	caption={SIMD enhanced code for approximation of $\pi$ using \texttt{AVX2} instructions. (Horizontal sum function in line 28 can be found in appendix).},
+	label={lst:pi_approximation_2}
+	]
+	double Worker::approximatePi(){
+		double pi = 0.0; // Initialize pi to 0.0
+		static constexpr long num_steps = 1000000; 
+		static constexpr double step = 1.0 / static_cast<double>(num_steps); 
+		
+		#if defined(__AVX2__)
+		// Use AVX2 SIMD instructions if available
+		double sum = 0; // Initialize scalar sum to accumulate final result
+		
+		// Initialise all necessary 256-bit vectors
+		__m256d vec_sum = _mm256_set1_pd(0.0);
+		__m256d vec_step = _mm256_set1_pd(step);
+		__m256d vec_half_step = _mm256_set1_pd(0.5 * step); 
+		__m256d vec_one = _mm256_set1_pd(1.0); 
+		__m256d vec_four = _mm256_set1_pd(4.0); 
+		__m256d vec_x, vec_temp; 
+		__m256d vec_i = _mm256_set_pd(3, 2, 1, 0); 
+		__m256d vec_increment = _mm256_set1_pd(4); 
+		
+		// Perform 4 computations at once, note "i" is incremented by 4 instead of 1
+		for (int i = 0; i < num_steps; i += 4) {
+			vec_x    = _mm256_add_pd(_mm256_mul_pd(vec_i, vec_step), vec_half_step); 
+			vec_temp = _mm256_div_pd(vec_four, _mm256_add_pd(vec_one, _mm256_mul_pd(vec_x, vec_x))); 
+			vec_sum  = _mm256_add_pd(vec_sum, vec_temp); 
+			vec_i    = _mm256_add_pd(vec_i, vec_increment); 
+		}
+		// Perform horizontal sum on vec_sum to get a scalar sum
+		sum = hsum256_pd(vec_sum);
+		// Multiply the sum by the step size to approximate pi
+		pi = sum * step; 
+		
+		#else
+		// If AVX2/SIMD instructions are unavailable then resort to using regular code... 
+		#endif
+		
+		return pi; 
+	}
+\end{lstlisting}
+
 Listing ~\ref{lst:avx2_horizontal_sum_function} shows the code for the horizontal sum function for performing the sum of \texttt{256-bit} vector using \texttt{AVX2} instructions. 
 
 \begin{lstlisting}[

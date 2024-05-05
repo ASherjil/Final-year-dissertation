@@ -14,7 +14,7 @@ On desktop(\texttt{x86}) processor, \texttt{AVX2} instructions were used to impl
 
 \begin{table}[htbp]
 	\centering
-	\begin{tabular}{|c|c|c|}
+	\begin{tabular}{ccc}
 		\hline
 		\textbf{Programming language/configuration} & \textbf{Decimal value of $\pi$} & \textbf{Mean run time(s)} \\ \hline
 		\texttt{C++}             & 3.1415926535897643 &  0.007659 \\ \hline
@@ -55,7 +55,7 @@ The decimal precision of using single and double precision floating point \textt
 
 \begin{table}[htbp]
 	\centering
-	\begin{tabular}{|c|c|c|c|}
+	\begin{tabular}{cccc}
 		\hline
 		\textbf{Programming language/configuration} & \textbf{Decimal value of $\pi$} & \textbf{Run time RPI5(s)} & \textbf{Run time RPI4(s)} \\ \hline
 		\texttt{C++}                                                   & 3.1415926535897643 & 0.028356  & 0.115569 \\ \hline
@@ -125,15 +125,15 @@ Figures ~\ref{fig:mobilenet_rpi5_plot} and ~\ref{fig:mobilenet_rpi4_plot} show r
 		\toprule
 		\textbf{Metric} & \textbf{Desktop} & \textbf{RPI5} & \textbf{RPI4} \\ \midrule
 		% Row 1
-		Original run time(ms)&1474.2&2462.33 &5108.77 \\
+		Original run time(ms)&1474.2&2462.33 &5108.77 \\ \hline
 		% Row 2
-		Lowest run time(ms)&188.24 &858.10 &2050.78 \\
+		Lowest run time(ms)&188.24 &858.10 &2050.78 \\ \hline
 		% Row 3
-		Best speedup&5.26 &2.86 &2.79 \\
+		Best speedup&5.26 &2.86 &2.79 \\ \hline
 		% Row 4
-		Optimal threads&8 &4 & 4\\
+		Optimal threads&8 &4 & 4\\ \hline
 		% Row 5
-		Performance gain versus original(\%)&87.2&65.2 & 59.90\\
+		Performance gain versus original(\%)&87.2&65.2 & 59.90\\ \hline
 		% Row 6
 		Performance gain versus RPI4(\%)&90.8 &58.2 &0 \\
 		\bottomrule
@@ -181,11 +181,11 @@ Results from the main setup (Figure~\ref{fig:debate_fi_setup}) using the \texttt
 		\toprule
 		\textbf{Metric} & \textbf{Local setup} & \textbf{Main setup} \\
 		\midrule
-		\texttt{STM32} Test Boards & 4 & 36 \\
-		Test scenarios & 5 & 1000 \\
-		Original solution run time(min) & 3.17 & 234.47 \\
-		Optimised solution run time(min) & 1.20 & 132.4 \\
-		Performance improvement(\%) & 62.1 & 43.5 \\
+		\texttt{STM32} Test Boards & 4 & 36 \\ \hline
+		Test scenarios & 5 & 1000 \\ \hline
+		Original solution run time(min) & 3.17 & 234.47 \\ \hline
+		Optimised solution run time(min) & 1.20 & 132.4 \\ \hline
+		Performance improvement(\%) & 62.1 & 43.5 \\ 
 		\bottomrule
 	\end{tabular}
 	\caption{Comparison of benchmark metrics on the local versus the main setup(Figure~\ref{fig:debate_fi_setup}).}

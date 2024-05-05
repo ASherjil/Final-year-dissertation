@@ -10,22 +10,35 @@ The following setup was used to collect results and benchmarking data:
 		\textbf{Specification} & \textbf{Desktop} & \textbf{RPI5} & \textbf{RPI4 Model B} \\ 
 		\midrule
 		Processor             & AMD Ryzen 7 5800H & Cortex A-76 & Cortex A-72 \\
+		\hline % Added line
 		Processor Type          & x86                      & ARM            & ARM \\
+		\hline % Added line
 		Processor Speed        & 3.2 - 4.4 GHz       & 2.4 GHz       & 1.5 - 1.8 GHz\\
+		\hline % Added line
 		Cores/Threads            & 8/16                    & 4/4                & 4/4 \\
+		\hline % Added line
 		RAM Size                   & 16GB                  & 8GB              & 4GB \\
+		\hline % Added line
 		RAM Type                  & DDR4                  & LPDDR4       & LPDDR4 \\
+		\hline % Added line
 		RAM Speed                & 3200 MT/s           & 4267 MT/s    &3200 MT/s \\
+		\hline % Added line
 		Operating System      & Ubuntu Linux 22.04.4 LTS & Debian Linux 12 (bookworm) &  Debian Linux 12 (bookworm)\\
+		\hline % Added line
 		GCC Compiler           & 11.4.0               & 12.2.0        &  12.2.0\\
+		\hline % Added line
 		GNAT Compiler         & 10.5.0               & 12.2.0        &  12.2.0\\
+		\hline % Added line
 		Java Compiler            & 11.0.22            & 17.0.10      &  17.0.10\\
+		\hline % Added line
 		C\# (.NET SDK)         & 7.0.117             & 6.8.0.15     &  6.8.0.15\\
 		\bottomrule
 	\end{tabular}
 	\caption{Specifications and software Versions of Desktop and Raspberry Pi Systems\cite{rasp_pi5_pi4_comparision}\cite{desktop_specs}\cite{rpi_specs}.}
 	\label{tab:spec_comparisons}
 \end{table}
+
+
 
 \newpage
 \section{Appendix (Objective 1: \texttt{mpbenchmark})}
@@ -230,28 +243,28 @@ Figure ~\ref{fig:mpbenchmark_rpi3_plot} shows the results collected from Raspber
 	\label{fig:mpbenchmark_rpi3_plot} % Use this label to reference the figure
 \end{figure}
 
-% Making the table fit in the page by scaling it down
 \begin{table}[h!]
 	\centering
 	\resizebox{\textwidth}{!}{% Resizes the table to fit within the text width
-		\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+		\begin{tabular}{ccccccccc}
 			\hline
 			\textbf{Cores} & \textbf{C} & \textbf{C++} & \textbf{C++(NEON single)} & \textbf{C++(NEON double)} & \textbf{Java} & \textbf{JavaForkJoin} & \textbf{C\#} & \textbf{Ada} \\ \hline
-			1              & 0           &0             & 0                         & 0                         &0               &0                     &0              &0             \\ \hline
-			2              & 0          & 0             &  0                        &  0                         & 0.18         &0                     &0              &0             \\ \hline
-			4              & 0           & 0            & 0                         & 0                          &1.33          &0                     & 0             &0             \\ \hline
-			8              & 0           & 0            &  0                        &   0                        & 8.21         & 1.03               &0              &0             \\ \hline
+			1              & 0           & 0            & 0                         & 0                         & 0             & 0                    & 0             & 0            \\ \hline
+			2              & 0           & 0            & 0                         & 0                         & 0.18          & 0                    & 0             & 0            \\ \hline
+			4              & 0           & 0            & 0                         & 0                         & 1.33          & 0                    & 0             & 0            \\ \hline
+			8              & 0           & 0            & 0                         & 0                         & 8.21          & 1.03                 & 0             & 0            \\ \hline
 		\end{tabular}
 	}
 	\caption{Mean deadlines missed, results collected from the Raspberry Pi 5.}
 	\label{tab:mpbenchmark_rpi5} % Label for referencing
 \end{table}
 
+
 % Making the table fit in the page by scaling it down
 \begin{table}[h!]
 	\centering
 	\resizebox{\textwidth}{!}{% Resizes the table to fit within the text width
-		\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+		\begin{tabular}{ccccccccc}
 			\hline
 			\textbf{Cores} & \textbf{C} & \textbf{C++} & \textbf{C++(NEON single)} & \textbf{C++(NEON double)} & \textbf{Java} & \textbf{JavaForkJoin} & \textbf{C\#} & \textbf{Ada} \\ \hline
 			1              & 0           &0              &  0                          & 0                         &0.90              &0                      &0             &0             \\ \hline
@@ -268,7 +281,7 @@ Figure ~\ref{fig:mpbenchmark_rpi3_plot} shows the results collected from Raspber
 \begin{table}[h!]
 	\centering
 	{\fontsize{12pt}{12pt}\selectfont % Set font size to 10pt with a 12pt line spacing
-		\begin{tabular}{|c|c|c|c|c|c|c|}
+		\begin{tabular}{ccccccc}
 			\hline
 			\textbf{Cores} & \textbf{C} & \textbf{C++} & \textbf{Java} & \textbf{JavaForkJoin} & \textbf{C\#} & \textbf{Ada} \\ \hline
 			1              & 1.17       & 1.30         & 1.60          & 1.10                 & 3.40         & 1.33         \\ \hline

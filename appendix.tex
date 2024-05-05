@@ -46,43 +46,43 @@ Listing ~\ref{lst:pi_approximation_2} shows the SIMD enhanced code using \texttt
 	caption={SIMD enhanced code for approximation of $\pi$ using \texttt{AVX2} instructions.},
 	label={lst:pi_approximation_2}
 	]
-	double Worker::approximatePi(){
-		double pi = 0.0; // Initialize pi to 0.0
-		static constexpr long num_steps = 1000000; 
-		static constexpr double step = 1.0 / static_cast<double>(num_steps); 
-		
-		#if defined(__AVX2__)
-		// Use AVX2 SIMD instructions if available
-		double sum = 0; // Initialize scalar sum to accumulate final result
-		
-		// Initialise all necessary 256-bit vectors
-		__m256d vec_sum = _mm256_set1_pd(0.0);
-		__m256d vec_step = _mm256_set1_pd(step);
-		__m256d vec_half_step = _mm256_set1_pd(0.5 * step); 
-		__m256d vec_one = _mm256_set1_pd(1.0); 
-		__m256d vec_four = _mm256_set1_pd(4.0); 
-		__m256d vec_x, vec_temp; 
-		__m256d vec_i = _mm256_set_pd(3, 2, 1, 0); 
-		__m256d vec_increment = _mm256_set1_pd(4); 
-		
-		// Perform 4 computations at once, note "i" is incremented by 4 instead of 1
-		for (int i = 0; i < num_steps; i += 4) {
-			vec_x    = _mm256_add_pd(_mm256_mul_pd(vec_i, vec_step), vec_half_step); 
-			vec_temp = _mm256_div_pd(vec_four, _mm256_add_pd(vec_one, _mm256_mul_pd(vec_x, vec_x))); 
-			vec_sum  = _mm256_add_pd(vec_sum, vec_temp); 
-			vec_i    = _mm256_add_pd(vec_i, vec_increment); 
-		}
-		// Perform horizontal sum on vec_sum to get a scalar sum
-		sum = hsum256_pd(vec_sum);
-		// Multiply the sum by the step size to approximate pi
-		pi = sum * step; 
-		
-		#else
-		// If AVX2/SIMD instructions are unavailable then resort to using regular code... 
-		#endif
-		
-		return pi; 
+double Worker::approximatePi(){
+	double pi = 0.0; // Initialize pi to 0.0
+	static constexpr long num_steps = 1000000; 
+	static constexpr double step = 1.0 / static_cast<double>(num_steps); 
+	
+	#if defined(__AVX2__)
+	// Use AVX2 SIMD instructions if available
+	double sum = 0; // Initialize scalar sum to accumulate final result
+	
+	// Initialise all necessary 256-bit vectors
+	__m256d vec_sum = _mm256_set1_pd(0.0);
+	__m256d vec_step = _mm256_set1_pd(step);
+	__m256d vec_half_step = _mm256_set1_pd(0.5 * step); 
+	__m256d vec_one = _mm256_set1_pd(1.0); 
+	__m256d vec_four = _mm256_set1_pd(4.0); 
+	__m256d vec_x, vec_temp; 
+	__m256d vec_i = _mm256_set_pd(3, 2, 1, 0); 
+	__m256d vec_increment = _mm256_set1_pd(4); 
+	
+	// Perform 4 computations at once, note "i" is incremented by 4 instead of 1
+	for (int i = 0; i < num_steps; i += 4) {
+		vec_x    = _mm256_add_pd(_mm256_mul_pd(vec_i, vec_step), vec_half_step); 
+		vec_temp = _mm256_div_pd(vec_four, _mm256_add_pd(vec_one, _mm256_mul_pd(vec_x, vec_x))); 
+		vec_sum  = _mm256_add_pd(vec_sum, vec_temp); 
+		vec_i    = _mm256_add_pd(vec_i, vec_increment); 
 	}
+	// Perform horizontal sum on vec_sum to get a scalar sum
+	sum = hsum256_pd(vec_sum);
+	// Multiply the sum by the step size to approximate pi
+	pi = sum * step; 
+	
+	#else
+	// If AVX2/SIMD instructions are unavailable then resort to using regular code... 
+	#endif
+	
+	return pi; 
+}
 \end{lstlisting}
 
 Listing ~\ref{lst:avx2_horizontal_sum_function} shows the code for the horizontal sum function for performing the sum of \texttt{256-bit} vector using \texttt{AVX2} instructions. 
@@ -163,39 +163,39 @@ double Worker::approximatePi(){
 	caption={Approximation of $\pi$ using double point precision \texttt{NEON} instructions.},
 	label={lst:neon_double}
 	]
-	double Worker::approximatePi(){
-		double pi = 0.0;
-		static constexpr long num_steps = 1000000;
-		static constexpr double step = 1.0 / static_cast<double>(num_steps);
+double Worker::approximatePi(){
+	double pi = 0.0;
+	static constexpr long num_steps = 1000000;
+	static constexpr double step = 1.0 / static_cast<double>(num_steps);
+	
+	#if defined(__AVX2__)
+	// Insert AVX2 specific code here ...
+	
+	#elif defined(__ARM_NEON)
+	// Insert NEON specific code here
+	float64x2_t vec_step = vdupq_n_f64(step);
+	float64x2_t vec_half_step = vdupq_n_f64(0.5 * step);
+	float64x2_t vec_one = vdupq_n_f64(1.0);
+	float64x2_t vec_four = vdupq_n_f64(4.0);
+	float64_t sum = 0.0;
+	
+	for (int i = 0; i < num_steps; i += 2) {
+		// Since direct lane setting for float64x2_t via intrinsics like vsetq_lane_f64 isn't straightforward,
+		// We compute x and its index scalarly and then load them into vectors.
+		double x0 = (i + 0.5) * step;
+		double x1 = (i + 1.5) * step;
+		float64x2_t vec_x = {x0, x1}; // Directly initialize the vector with double values.
 		
-		#if defined(__AVX2__)
-		// Insert AVX2 specific code here ...
-		
-		#elif defined(__ARM_NEON)
-		// Insert NEON specific code here
-		float64x2_t vec_step = vdupq_n_f64(step);
-		float64x2_t vec_half_step = vdupq_n_f64(0.5 * step);
-		float64x2_t vec_one = vdupq_n_f64(1.0);
-		float64x2_t vec_four = vdupq_n_f64(4.0);
-		float64_t sum = 0.0;
-		
-		for (int i = 0; i < num_steps; i += 2) {
-			// Since direct lane setting for float64x2_t via intrinsics like vsetq_lane_f64 isn't straightforward,
-			// We compute x and its index scalarly and then load them into vectors.
-			double x0 = (i + 0.5) * step;
-			double x1 = (i + 1.5) * step;
-			float64x2_t vec_x = {x0, x1}; // Directly initialize the vector with double values.
-			
-			float64x2_t vec_temp = vdivq_f64(vec_four, vaddq_f64(vec_one, vmulq_f64(vec_x, vec_x)));
-			sum += vaddvq_f64(vec_temp); // Horizontal sum of vector elements.
-		}
-		
-		pi = sum * step;
-		#else
-		// Insert regular code here ...
-		#endif
-		return pi;
+		float64x2_t vec_temp = vdivq_f64(vec_four, vaddq_f64(vec_one, vmulq_f64(vec_x, vec_x)));
+		sum += vaddvq_f64(vec_temp); // Horizontal sum of vector elements.
 	}
+	
+	pi = sum * step;
+	#else
+	// Insert regular code here ...
+	#endif
+	return pi;
+}
 \end{lstlisting}
 
 To use \texttt{AVX2} instructions for the application, the following changes were made to the \texttt{CMakeLists.txt} file, however no changes were required to use \texttt{NEON} instructions, see Listing ~\ref{lst:cmake_simd}.
@@ -205,20 +205,20 @@ To use \texttt{AVX2} instructions for the application, the following changes wer
 	caption={Adding \texttt{-mavx2 -mfma} flags to the \texttt{CMake} file to allow the project to use \texttt{AVX2} instructions.},
 	label={lst:cmake_simd}
 	]
-	# Compiler optimizations
-	include(CheckCXXCompilerFlag)
-	
-	# Check and enable AVX2 and FMA for x86_64 architecture
-	CHECK_CXX_COMPILER_FLAG("-mavx2" COMPILER_SUPPORTS_AVX2)
-	CHECK_CXX_COMPILER_FLAG("-mfma" COMPILER_SUPPORTS_FMA)
-	if (COMPILER_SUPPORTS_AVX2 AND COMPILER_SUPPORTS_FMA)
-	target_compile_options(${PROJECT_NAME} PRIVATE -mavx2 -mfma)
-	endif()
-	
-	if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm" OR CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
-	# For ARMv8-A (aarch64), NEON is always available. No need for -mfpu=neon
-	# We can set architecture-specific flags if necessary, but for NEON, it's not required.
-	endif
+# Compiler optimizations
+include(CheckCXXCompilerFlag)
+
+# Check and enable AVX2 and FMA for x86_64 architecture
+CHECK_CXX_COMPILER_FLAG("-mavx2" COMPILER_SUPPORTS_AVX2)
+CHECK_CXX_COMPILER_FLAG("-mfma" COMPILER_SUPPORTS_FMA)
+if (COMPILER_SUPPORTS_AVX2 AND COMPILER_SUPPORTS_FMA)
+target_compile_options(${PROJECT_NAME} PRIVATE -mavx2 -mfma)
+endif()
+
+if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm" OR CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+# For ARMv8-A (aarch64), NEON is always available. No need for -mfpu=neon
+# We can set architecture-specific flags if necessary, but for NEON, it's not required.
+endif
 \end{lstlisting}
 
 Figure ~\ref{fig:mpbenchmark_rpi3_plot} shows the results collected from Raspberry Pi 3 (\texttt{Cortex-A53} processor).
@@ -336,7 +336,7 @@ Figure ~\ref{fig:mobilenet_classes} shows the translation from Chinese to Englis
 	\label{fig:mobilenet_classes} % Use this label to reference the figure
 \end{figure}
 
-The application was modified to have three command line arguments, this served primarily to make testing and collecting benchmark results, making the process easier for development purposes. The three arguments are as follows and can be seen in code in listing ~\ref{lst:mobilenet_command_line_arguments}:
+The application was modified to have three command line arguments, this served primarily to make testing and collecting benchmark results easier for development purposes. The three arguments are as follows and can be seen in code in listing ~\ref{lst:mobilenet_command_line_arguments}:
 
 \begin{enumerate}
 	\item \texttt{test\_all}: This argument can be altered to either test one image or test all images in the data folder.  
@@ -348,36 +348,36 @@ The application was modified to have three command line arguments, this served p
 	caption={Altering the \texttt{MobileNet} application to use three command line arguments. \texttt{./mobilenet [test\_all] [write\_to\_file] [threads]}},
 	label={lst:mobilenet_command_line_arguments}
 	]
-	int main(int argc, char* argv[])
-	{
-		//---------------------------Command line app logic
-		bool testAllImages = false;
-		bool writeDataToFile = false;  // Declare the variable to handle write to file logic
-		bool g_DebugMode = true;       // Default debug mode setting
-		int numThreads = 1;            // Default to 1 thread unless specified
-		
-		if (argc > 1) {
-			std::string firstArg(argv[1]);
-			testAllImages = (firstArg == "test_all");
-		}
-		if (argc > 2) {
-			std::string secondArg(argv[2]);
-			writeDataToFile = (secondArg == "write_to_file");
-			g_DebugMode = !writeDataToFile; 
-		}
-		if (argc > 3) {
-			numThreads = std::atoi(argv[3]);
-			if (numThreads <= 0) {
-				numThreads = omp_get_max_threads();  
-			}
-		}
-		//--------------------------------------------------
-		// Further logic and operations can follow here
+int main(int argc, char* argv[])
+{
+	//---------------------------Command line app logic
+	bool testAllImages = false;
+	bool writeDataToFile = false;  // Declare the variable to handle write to file logic
+	bool g_DebugMode = true;       // Default debug mode setting
+	int numThreads = 1;            // Default to 1 thread unless specified
+	
+	if (argc > 1) {
+		std::string firstArg(argv[1]);
+		testAllImages = (firstArg == "test_all");
 	}
+	if (argc > 2) {
+		std::string secondArg(argv[2]);
+		writeDataToFile = (secondArg == "write_to_file");
+		g_DebugMode = !writeDataToFile; 
+	}
+	if (argc > 3) {
+		numThreads = std::atoi(argv[3]);
+		if (numThreads <= 0) {
+			numThreads = omp_get_max_threads();  
+		}
+	}
+	//--------------------------------------------------
+	// Further logic and operations can follow here
+}
 \end{lstlisting}
 
 
-\texttt{Calgrind} profiling results from the \texttt{MobileNet} application show the following functions with the highest self-cost, these were \texttt{ConvLayer::forward()}, \texttt{BatchNormalLayer::forward()} and \texttt{ConvLayer::Addpad()} as seen in figure ~\ref{fig:mobilenet_profiling}.
+\texttt{Calgrind} profiling results from the \texttt{MobileNet} application show the following functions with the highest self-cost, these were \texttt{ConvLayer::forward()}, \texttt{BatchNormalLayer::forward()} and \texttt{ConvLayer::Addpad()} as seen in Figure ~\ref{fig:mobilenet_profiling}.
 
 \begin{figure}[H] % Positioning preference: here, top, bottom, page
 	\centering
@@ -451,7 +451,7 @@ void ConvLayer::Addpad(float *pfInput)
 \section{Appendix (Objective 3: \texttt{DeBaTE-FI} platform)}
 \label{sec:app_obj3}
 
-The application was profiled using \texttt{py-spy} tool. The application spawned multiple processes, therefore they were profiled separately. Profiling results from the process responsible for the GUI of the application are shown in figure ~\ref{fig:debate_profile_1} and the profiling results from the process responsible for communicating with the MCUs are shown in figure ~\ref{fig:debate_profile_2}.
+The application was profiled using \texttt{py-spy} tool. The application spawned multiple processes, therefore they were profiled separately. Profiling results from the process responsible for the GUI of the application are shown in Figure ~\ref{fig:debate_profile_1} and the profiling results from the process responsible for communicating with the MCUs are shown in Figure ~\ref{fig:debate_profile_2}.
 
 \begin{figure}[H] % Positioning preference: here, top, bottom, page
 	\centering
@@ -476,7 +476,7 @@ Figure ~\ref{fig:debate_fi_telnetlibcpp} shows the thought process of designing 
 	\label{fig:debate_fi_telnetlibcpp} % Use this label to reference the figure
 \end{figure}
 
-The \texttt{C++} wrapper was created by emulating the \texttt{Python's} \texttt{telnetlib} library.Using the code in listing ~\ref{lst:open_ocd_class} the following functions require emulation:
+The \texttt{C++} wrapper was created by emulating the \texttt{Python's} \texttt{telnetlib} library. Using the code in listing ~\ref{lst:open_ocd_class} the following functions required emulation:
 
 \begin{enumerate}
 	\item \texttt{read\_some()}
@@ -528,10 +528,10 @@ class OpenOCD:
 		return self.Readout()
 \end{lstlisting}
 
-Using the open-source \texttt{telnet} libraries in \texttt{C++}: \texttt{telnetpp}\cite{telnetpp_library} and \texttt{serverpp}\cite{serverpp_library} the necessary functions were created in the wrapper class seen in figure ~\ref{fig:telnetlibcpp_UML}. Listing ~\ref{lst:c++_telnetlibcpp} shows the code:
+Using the open-source \texttt{telnet} libraries in \texttt{C++}: \texttt{telnetpp}\cite{telnetpp_library} and \texttt{serverpp}\cite{serverpp_library} the necessary functions were created in the wrapper class seen in Figure ~\ref{fig:telnetlibcpp_UML}. Listing ~\ref{lst:c++_telnetlibcpp} shows the code:
 
 \begin{lstlisting}[
-	caption={\texttt{C++} wrapper class to integrate with the \texttt{Python} application. Emulating functions \texttt{read\_some()}, \texttt{write()}, \texttt{Exec()} and \texttt{Readout()}. },
+	caption={Emulating functions \texttt{read\_some()}, \texttt{write()}, \texttt{Exec()} and \texttt{Readout()} in \texttt{C++}. },
 	label={lst:c++_telnetlibcpp}
 	]
 std::vector<serverpp::byte> TelnetlibCpp::read_some() {
@@ -615,7 +615,7 @@ std::vector<std::string> TelnetlibCpp::Readout() {
 
 \end{lstlisting}
 
-This was integrated into the \texttt{Python} application using a tool called \texttt{pybind11}. This required creating a \texttt{.cpp} file to allow the \texttt{C++} funtions to be called from the \texttt{Python} file, this is seen in listing ~\ref{lst:pybind_c++_file}.
+This was integrated into the \texttt{Python} application using a tool called \texttt{pybind11}. This required creating a \texttt{.cpp} file to allow the \texttt{C++} funtions to be called from the \texttt{Python} file, this is seen in Listing ~\ref{lst:pybind_c++_file}.
 
 \begin{lstlisting}[
 	caption={Preparing our \texttt{C++} class \texttt{telnetlibcpp} using \texttt{pybind11} to be used with \texttt{Python}.},

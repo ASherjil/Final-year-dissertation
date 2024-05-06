@@ -31,7 +31,7 @@ On desktop(\texttt{x86}) processor, \texttt{AVX2} instructions were used to impl
 % Talk about SMT's benefits if any
 % Discuss AVX2's decimal precision
 
-The proposed \texttt{C++} solution outperformed the original implementations in \texttt{C} and \texttt{Ada} by over 11\%, marking a significant reduction in runtime. Additionally, it achieved a higher speed-up compared to the \texttt{Ada} solution, as illustrated in Figure~\ref{fig:mpbenchmark_desktop_plot}. The SIMD-enhanced solution achieved a remarkable runtime reduction of over 70\%, significantly outperforming all other solutions. However, this version did not show as large a speedup when run with an increased number of threads, which is not surprising given the already low runtime with a single thread. Moreover, the \texttt{AVX2}-enhanced code demonstrated decimal precision up to 12 decimal places, with discrepancies appearing from the 13th decimal place onwards, as shown in table~\ref{tab:c++_avx2_pi}. This suggests a slight consideration that using \texttt{AVX2} instructions might lead to reduced precision for calculations requiring high decimal accuracy. However, the reduction in decimal precision has been minor, and its effects on the application have been largely inconsequential. Given the dramatic improvement in performance with \texttt{AVX2} instructions, the minor loss of decimal precision seems negligible compared to the benefits. Both solutions have met their objectives, with the first achieving superior speed-up and the second providing insights into CPU performance when SIMD intrinsics are utilized.
+The proposed \texttt{C++} solution outperformed the original implementations in \texttt{C} and \texttt{Ada} by over 11\%, marking a significant reduction in runtime. Additionally, it achieved a higher speed-up compared to the \texttt{Ada} solution, as illustrated in Figure~\ref{fig:mpbenchmark_desktop_plot}. The SIMD-enhanced solution achieved a remarkable runtime reduction of over 70\%, significantly outperforming all other solutions. However, this version did not show as large a speedup when run with an increased number of threads, which is not surprising given the already low runtime with a single thread. Moreover, the \texttt{AVX2}-enhanced code demonstrated decimal precision up to 12 decimal places, with discrepancies appearing from the 13th decimal place onwards, as shown in Table~\ref{tab:c++_avx2_pi}. This suggests a slight consideration that using \texttt{AVX2} instructions might lead to reduced precision for calculations requiring high decimal accuracy. However, the reduction in decimal precision has been minor, and its effects on the application have been largely inconsequential. Given the dramatic improvement in performance with \texttt{AVX2} instructions, the minor loss of decimal precision seems negligible compared to the benefits. Both solutions have met their objectives, with the first achieving superior speed-up and the second providing insights into CPU performance when SIMD intrinsics are utilized.
 
 Another noteworthy observation is the lack of performance gain when scaling from 8 to 16 cores. The processor used supports simultaneous multi-threading (SMT), commonly branded as ``Hyper-threading" for Intel CPUs, which is typical in modern \texttt{x86} processors. SMT theoretically allows each physical core to execute two threads, and an 8-core processor with SMT would appear to have 16 cores. However, the proposed solutions, along with other compiled languages like \texttt{C} and \texttt{Ada}, showed negligible performance gains by utilizing the virtual cores. \texttt{Java} experienced a slight performance degradation, while \texttt{C\#} was the only language to demonstrate a performance increase. Using the results from the \texttt{x86} processor, we can conclude that the additional cores provided by SMT did not enhance performance and, in some cases, even degraded it.
 
@@ -88,7 +88,7 @@ Figure ~\ref{fig:mobilenet_desktop_plot} shows the results collected after paral
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
 	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_desktop.png} % Adjust the path and width as needed
-	\caption{Mean benchmark plot in milliseconds shown left. Speedup plot shown right.}
+	\caption{Mean benchmark plot in milliseconds shown top. Speedup plot shown bottom.}
 	\label{fig:mobilenet_desktop_plot} % Use this label to reference the figure
 \end{figure}
 
@@ -108,14 +108,14 @@ Figures ~\ref{fig:mobilenet_rpi5_plot} and ~\ref{fig:mobilenet_rpi4_plot} show r
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
 	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_rpi5.png} % Adjust the path and width as needed
-	\caption{Mean benchmark plot in milliseconds shown left. Speedup plot shown right.}
+	\caption{Mean benchmark plot in milliseconds shown top. Speedup plot shown bottom.}
 	\label{fig:mobilenet_rpi5_plot} % Use this label to reference the figure
 \end{figure}
 
 \begin{figure}[htbp] % Positioning preference: here, top, bottom, page
 	\centering
 	\includegraphics[width=1\textwidth, height=10cm]{~/Documents/Part_D_Modules/Individual_Project/Individual_report/figures/mobilenet_rpi4.png} % Adjust the path and width as needed
-	\caption{Mean benchmark plot in milliseconds shown left. Speedup plot shown right.}
+	\caption{Mean benchmark plot in milliseconds shown top. Speedup plot shown bottom.}
 	\label{fig:mobilenet_rpi4_plot} % Use this label to reference the figure
 \end{figure}
 

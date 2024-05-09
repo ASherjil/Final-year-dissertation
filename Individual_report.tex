@@ -118,38 +118,53 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
-% Include fancyhdr for header and footer customization
-\usepackage{fancyhdr}
 
-% Page style setup
+%Adjust TOC page------------------------------------
+\usepackage{etoolbox} % Load the etoolbox package to use \patchcmd
+\makeatletter
+\patchcmd{\tableofcontents}{\contentsname}{\vspace*{1cm}\contentsname}{}{} 
+\makeatother
+%-----------------------------------------------------------
+
+% Add a header and footers-------------------------
+\definecolor{headergray}{gray}{0.5}
+\usepackage{fancyhdr}
+\usepackage{lastpage} % Needed to reference the last page
+
 \pagestyle{fancy}
 \fancyhf{} % clear all header and footer fields
-\fancyfoot[C]{\thepage} % put the page number in the center of the footer
+\fancyhead[L]{\fontsize{12}{14}\selectfont\color{headergray}Wolfson School of Mechanical, Electrical and Manufacturing Engineering}
+\fancyfoot[C]{Page \thepage\ of \pageref{LastPage}} % Page numbering
 \renewcommand{\headrulewidth}{0pt} % no line in header area
 \renewcommand{\footrulewidth}{0pt} % no line in footer area
 
-% Ensure the plain page style, used on chapter opening pages, is also empty
+% Ensure the plain page style, used on chapter opening pages, is also consistent
 \fancypagestyle{plain}{
 	\fancyhf{} % clear all header and footer fields for plain pages
-	\fancyfoot[C]{\thepage} % page number in the center of the footer on plain pages
+	\fancyhead[L]{\fontsize{12}{14}\selectfont\color{headergray}Wolfson School of Mechanical, Electrical and Manufacturing Engineering}
+	\fancyfoot[C]{Page \thepage\ of \pageref{LastPage}} % consistent page numbering
 	\renewcommand{\headrulewidth}{0pt}
 	\renewcommand{\footrulewidth}{0pt}
 }
+%--------------------------------------------
 
 
 
 \usepackage{titlesec}
-
-% Formatting the chapter title to remove "Chapter X"
 \titleformat{\chapter}[display]
 {\normalfont\huge\bfseries}{}{0pt}{\Huge}
 
-
 \begin{document}
 \begin{titlepage}
+	%Apply header and footer
+	\fancyhead[L]{\fontsize{12}{14}\selectfont\color{headergray}Wolfson School of Mechanical, Electrical and Manufacturing Engineering}
+	\fancyfoot[C]{Page \thepage\ of \pageref{LastPage}} % Page numbering
+	\thispagestyle{fancy} % Apply the header/footer styling to the title page
+	%------------------------------
+	
 	\centering
 	% Title
-	\vspace*{1cm} % Adjust the vertical space as needed
+	\vspace*{0cm} % Adjust the vertical space as needed
 	{\Huge\bfseries Individual Project\\[0.5cm] Final Report\par}
 	\vspace{2cm}
 	% Reset centering to left-align the rest
